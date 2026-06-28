@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ディーラー評価フォーム</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;background:#f5f5f0;color:#1a1a1a;padding-bottom:3rem}
+.wrap{max-width:480px;margin:0 auto;padding:1rem}
+.header{background:#1a1a1a;color:#fff;padding:1rem;text-align:center;position:sticky;top:0;z-index:10}
+.header h1{font-size:15px;font-weight:500}
+.header .sub{font-size:11px;opacity:.6;margin-top:2px}
+.steps{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3)}
+.step-dot.active{background:#fff;width:20px;border-radius:4px}
+.step-dot.done{background:rgba(255,255,255,.7)}
+.screen{display:none}.screen.active{display:block}
+.card{background:#fff;border-radius:12px;padding:1rem;margin:1rem 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.row{padding:10px 0;border-bottom:1px solid #f0f0f0}
+.row:last-child{border-bottom:none}
+.row-top{display:flex;align-items:center;justify-content:space-between}
+.row-name{font-size:13px;color:#1a1a1a;flex:1;margin-right:8px}
+.stars{display:flex;gap:4px;flex-shrink:0}
+.star{font-size:22px;cursor:pointer;color:#ddd;line-height:1;user-select:none;-webkit-tap-highlight-color:transparent;padding:2px}
+.star.on{color:#f59e0b}
+.guide{font-size:11px;color:#999;margin-top:6px;line-height:1.6;background:#f9f9f9;border-radius:6px;padding:6px 8px}
+.guide-item{display:block;margin-bottom:1px}
+.guide-item.current{color:#2563eb;font-weight:500}
+.comment-area{width:100%;margin-top:8px;padding:8px 10px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:13px;resize:none;font-family:inherit}
+.select-field{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;margin-bottom:8px;-webkit-appearance:none}
+.search-wrap{position:relative;margin-bottom:6px}
+.search-input{width:100%;padding:10px 10px 10px 36px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;font-family:inherit}
+.search-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#aaa;font-size:14px}
+.pref-select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:13px;margin-bottom:6px;-webkit-appearance:none}
+.dropdown{border:1px solid #e5e5e5;border-radius:8px;background:#fff;max-height:200px;overflow-y:auto;display:none;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.dropdown.open{display:block}
+.drop-item{padding:10px 14px;font-size:14px;color:#1a1a1a;cursor:pointer;border-bottom:1px solid #f0f0f0}
+.drop-item:last-child{border-bottom:none}
+.drop-item:hover,.drop-item:active{background:#f5f5f0}
+.drop-sub{font-size:11px;color:#999;margin-left:8px}
+.drop-none{padding:10px 14px;font-size:13px;color:#aaa}
+.selected-tag{display:inline-flex;align-items:center;gap:8px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:20px;padding:5px 12px;font-size:13px;margin-top:4px}
+.clear-x{cursor:pointer;font-size:16px;line-height:1;color:#3b82f6}
+.deduct-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.deduct-row:last-child{border-bottom:none}
+.deduct-label{font-size:13px;color:#1a1a1a;flex:1}
+.counter{display:flex;align-items:center;gap:8px}
+.cnt-btn{width:30px;height:30px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.cnt-btn.minus{color:#ef4444}
+.cnt-btn.plus{color:#22c55e}
+.cnt-val{min-width:20px;text-align:center;font-size:14px;font-weight:500}
+.nav{display:flex;gap:8px;padding:0 1rem;margin-top:1rem}
+.btn{flex:1;padding:12px;border-radius:8px;border:1px solid #e5e5e5;background:#fff;color:#1a1a1a;font-size:14px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.btn.primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.btn:active{opacity:.8}
+.hint{font-size:11px;color:#999;margin:0 0 4px;padding:0 1rem}
+.toast{display:none;margin:1rem;padding:12px 16px;background:#dcfce7;border:1px solid #86efac;color:#166534;border-radius:8px;font-size:13px;text-align:center}
+.loading{display:none;margin:1rem;padding:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;font-size:13px;text-align:center}
+.error-msg{display:none;margin:1rem;padding:12px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:8px;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>ディーラー評価フォーム</h1>
+  <div class="sub" id="screenSub">ステップ 1 / 3</div>
+  <div class="steps">
+    <div class="step-dot active" id="dot0"></div>
+    <div class="step-dot" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ステップ1：基本情報 -->
+<div class="screen active" id="screen0">
+  <div class="card">
+    <div class="card-title">👤 評価者</div>
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input class="search-input" id="evalSearch" placeholder="名前で検索..." autocomplete="off" oninput="filterEval()" onfocus="openDrop('eval')" onblur="closeDrop('eval')">
+    </div>
+    <div class="dropdown" id="evalDrop"></div>
+    <div id="evalTag"></div>
+    <select class="select-field" id="evalRole" style="margin-top:8px">
+      <option value="">ロールを選択</option>
+      <option value="td">TD</option>
+      <option value="floor">フロア</option>
+      <option value="pit">ピット</option>
+    </select>
+  </div>
+  <div class="card">
+    <div class="card-title">🃏 評価するディーラー</div>
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input class="search-input" id="dealerSearch" placeholder="名前で検索（ひらがなOK）..." autocomplete="off" oninput="filterDealer()" onfocus="openDrop('dealer')" onblur="closeDrop('dealer')">
+    </div>
+    <select class="pref-select" id="prefFilter" onchange="filterDealer()">
+      <option value="">都道府県で絞り込み</option>
+    </select>
+    <div class="dropdown" id="dealerDrop"></div>
+    <div id="dealerTag"></div>
+  </div>
+  <div class="nav">
+    <button class="btn primary" onclick="goTo(1)">次へ →</button>
+  </div>
+</div>
+
+<!-- ステップ2：技術評価 -->
+<div class="screen" id="screen1">
+  <p class="hint">気になった項目だけ選択してOK。未選択のまま送信できます。</p>
+  <div class="card">
+    <div class="card-title">🃏 カードの扱い</div>
+    <div id="rows-card"></div>
+    <textarea class="comment-area" data-comment="card" rows="2" placeholder="カードに関するコメント（任意）"></textarea>
+  </div>
+  <div class="card">
+    <div class="card-title">🪙 チップの扱い</div>
+    <div id="rows-chip"></div>
+    <textarea class="comment-area" data-comment="chip" rows="2" placeholder="チップに関するコメント（任意）"></textarea>
+  </div>
+  <div class="card">
+    <div class="card-title">🧮 計算力・ゲーム進行</div>
+    <div id="rows-game"></div>
+    <textarea class="comment-area" data-comment="game" rows="2" placeholder="ゲーム進行に関するコメント（任意）"></textarea>
+  </div>
+  <div class="nav">
+    <button class="btn" onclick="goTo(0)">← 戻る</button>
+    <button class="btn primary" onclick="goTo(2)">次へ →</button>
+  </div>
+</div>
+
+<!-- ステップ3：人柄・減点 -->
+<div class="screen" id="screen2">
+  <p class="hint">気になった項目だけ選択してOK。未選択のまま送信できます。</p>
+  <div class="card">
+    <div class="card-title">💛 人柄</div>
+    <div id="rows-personality"></div>
+    <textarea class="comment-area" data-comment="personality" rows="2" placeholder="人柄に関するコメント（任意）"></textarea>
+  </div>
+  <div class="card" style="border-left:3px solid #ef4444">
+    <div class="card-title" style="color:#ef4444">⚠️ 減点記録</div>
+    <div class="deduct-row">
+      <div class="deduct-label">私物・弁当を片付けなかった</div>
+      <div class="counter">
+        <button class="cnt-btn minus" onclick="changeDeduct('mess',-1)">－</button>
+        <span class="cnt-val" id="mess-count">0</span>
+        <button class="cnt-btn plus" onclick="changeDeduct('mess',1)">＋</button>
+      </div>
+    </div>
+    <div class="deduct-row">
+      <div class="deduct-label">控室での悪口・不適切発言</div>
+      <div class="counter">
+        <button class="cnt-btn minus" onclick="changeDeduct('gossip',-1)">－</button>
+        <span class="cnt-val" id="gossip-count">0</span>
+        <button class="cnt-btn plus" onclick="changeDeduct('gossip',1)">＋</button>
+      </div>
+    </div>
+    <div class="deduct-row">
+      <div class="deduct-label">その他問題行動</div>
+      <div class="counter">
+        <button class="cnt-btn minus" onclick="changeDeduct('other',-1)">－</button>
+        <span class="cnt-val" id="other-count">0</span>
+        <button class="cnt-btn plus" onclick="changeDeduct('other',1)">＋</button>
+      </div>
+    </div>
+    <textarea class="comment-area" data-comment="deduct" rows="2" placeholder="問題行動の詳細（任意）"></textarea>
+  </div>
+  <div class="card">
+    <div class="card-title">💬 総合コメント</div>
+    <textarea class="comment-area" data-comment="overall" rows="3" placeholder="全体的な気づき・成長のポイントなど"></textarea>
+  </div>
+  <div class="nav">
+    <button class="btn" onclick="goTo(1)">← 戻る</button>
+    <button class="btn primary" onclick="submitForm()">送信 ✓</button>
+  </div>
+  <div class="loading" id="loading">送信中...</div>
+  <div class="toast" id="toast">✅ 評価を登録しました</div>
+  <div class="error-msg" id="error-msg">送信に失敗しました。もう一度お試しください。</div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// =============================
+// ★ 設定：ここだけ変更してください
+// =============================
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxgjTsiJ47Dk3k5V5PYXehswVhvbZqSuNBhAaVG3iBI0Qq8uTH03YB_uCdM0Fpig2g/exec'; // Google Apps ScriptのURLをここに貼る
+
+// =============================
+// ディーラー・評価者リスト（運営が追加・編集）
+// =============================
+const EVALUATORS = [
+  {id:'E01', name:'山本 太郎', kana:'やまもとたろう', role:'TD'},
+  {id:'E02', name:'佐藤 花子', kana:'さとうはなこ', role:'フロア'},
+  {id:'E03', name:'中村 健',   kana:'なかむらけん',   role:'ピット'},
+  {id:'E04', name:'高橋 みな', kana:'たかはしみな',   role:'フロア'},
+];
+
+const DEALERS = [
+  {id:'D001', name:'田中 さくら', kana:'たなかさくら', pref:'大阪府'},
+  {id:'D002', name:'鈴木 けんた', kana:'すずきけんた', pref:'東京都'},
+  {id:'D003', name:'山田 みき',   kana:'やまだみき',   pref:'大阪府'},
+  {id:'D004', name:'伊藤 りゅう', kana:'いとうりゅう', pref:'兵庫県'},
+  {id:'D005', name:'田中 花子',   kana:'たなかはなこ', pref:'兵庫県'},
+];
+
+const PREFS = [...new Set(DEALERS.map(d=>d.pref))].sort();
+
+// =============================
+// 評価項目・基準定義
+// =============================
+const AXES = {
+  card:[
+    {key:'shuffle',   label:'シャッフルの正確さ', guide:['毎回ミスがある','時々ミスや雑さが目立つ','平均的にこなせる','安定して正確・スムーズ','完璧・お手本レベル']},
+    {key:'pitching',  label:'ピッチングの正確さ', guide:['毎回コントロールが乱れる','時々ずれや強さにムラがある','平均的に届けられる','安定して正確に届けられる','狙い通り・お手本レベル']},
+    {key:'cardspeed', label:'スピード',           guide:['著しく遅く進行を妨げる','やや遅くテンポが乱れる','平均的な速さ','テンポよくスムーズ','非常に速く正確']},
+    {key:'decktilt',  label:'デックの傾き',       guide:['常に傾いており見えてしまう','時々傾きが目立つ','多少傾くが支障なし','ほぼ水平を保てる','常に完璧な角度を維持']},
+  ],
+  chip:[
+    {key:'sizing', label:'チップサイジング', guide:['サイジングできていない','時々サイジングしていない','平均的にサイジングできる','安定してきれいにサイジング','常に完璧・見栄えも美しい']},
+    {key:'count',  label:'チップカウント',   guide:['毎回数え間違いがある','時々ミスがある','平均的に正確','ほぼミスなく素早い','完璧・即座に正確']},
+  ],
+  game:[
+    {key:'calc',    label:'計算力',             guide:['毎回計算ミスがある','時々計算が遅い・間違える','平均的に計算できる','素早く正確に計算できる','瞬時に正確・どんな状況も対応']},
+    {key:'rules',   label:'ルール理解度',       guide:['基本ルールが不安定','時々ルールに迷う','基本ルールは問題なし','応用ルールも対応できる','全ゲーム・全状況に完全対応']},
+    {key:'mistake', label:'ミスの少なさ',       guide:['毎回何らかのミスがある','時々ミスが目立つ','平均的なミス頻度','ほぼミスなく進行できる','ミスがほぼゼロ・自己修正も迅速']},
+    {key:'tempo',   label:'テンポコントロール', guide:['進行が遅くゲームが止まる','時々テンポが乱れる','平均的なテンポ','スムーズなテンポを維持','最高のテンポ・場を支配できる']},
+    {key:'report',  label:'フロアへの状況報告', guide:['報告できない・状況把握不可','報告が遅い・情報が不正確','最低限の報告はできる','素早く正確に報告できる','的確・簡潔・即座に状況共有']},
+  ],
+  personality:[
+    {key:'greeting',   label:'挨拶・礼儀',       guide:['挨拶がない・態度が悪い','挨拶が不十分・受け身','普通に挨拶できる','自発的に明るく挨拶できる','誰に対しても常に完璧な礼儀']},
+    {key:'service',    label:'お客様との接客',   guide:['お客様対応に問題がある','接客がやや消極的','普通に対応できる','自然な会話・お客様が喜ぶ','場を盛り上げ指名・リピートされる']},
+    {key:'obedience',  label:'指示への素直さ',   guide:['指示を無視・反発する','時々素直に従えない','指示通りに動ける','素直に即動ける・確認も丁寧','先読みして動ける・指示不要なレベル']},
+    {key:'teamwork',   label:'チームへの協力度', guide:['協力しない・自分本位','言われたことだけやる','普通に協力できる','積極的に周りをサポート','率先してチームを引っ張る']},
+  ],
+};
+
+const ratings = {};
+const deducts = {mess:0, gossip:0, other:0};
+const selected = {eval:null, dealer:null};
+let closeTimers = {};
+
+function toKana(s){return s.replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));}
+function norm(s){return toKana((s||'').toLowerCase());}
+
+// 都道府県プルダウン初期化
+function initPrefSelect(){
+  const s = document.getElementById('prefFilter');
+  PREFS.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});
+}
+
+// 評価行を構築
+function buildRows(containerId, axisKey){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  AXES[axisKey].forEach(({key, label, guide})=>{
+    if(ratings[key]===undefined) ratings[key]=0;
+    const div = document.createElement('div');
+    div.className = 'row';
+    div.id = 'row-'+key;
+    const guideHtml = guide.map((g,i)=>`<span class="guide-item" id="g-${key}-${i+1}">★${i+1}：${g}</span>`).join('');
+    div.innerHTML = `
+      <div class="row-top">
+        <div class="row-name">${label}</div>
+        <div class="stars" id="stars-${key}"></div>
+      </div>
+      <div class="guide" id="guide-${key}">${guideHtml}</div>`;
+    el.appendChild(div);
+    buildStarEl(key);
+  });
+}
+
+function buildStarEl(key){
+  const el = document.getElementById('stars-'+key);
+  if(!el) return;
+  el.innerHTML = '';
+  for(let i=1;i<=5;i++){
+    const s = document.createElement('span');
+    s.className = 'star'+(ratings[key]>=i?' on':'');
+    s.textContent = '★';
+    const v = i;
+    s.onclick = ()=>{ratings[key]=(ratings[key]===v)?0:v; buildStarEl(key); updateGuide(key);};
+    s.ontouchstart = ()=>{};
+    el.appendChild(s);
+  }
+  updateGuide(key);
+}
+
+function updateGuide(key){
+  const v = ratings[key];
+  for(let i=1;i<=5;i++){
+    const g = document.getElementById(`g-${key}-${i}`);
+    if(g) g.className = 'guide-item'+(v===i?' current':'');
+  }
+}
+
+function rebuildAll(){
+  buildRows('rows-card','card');
+  buildRows('rows-chip','chip');
+  buildRows('rows-game','game');
+  buildRows('rows-personality','personality');
+}
+
+// 検索・ドロップダウン
+function filterEval(){
+  const q = norm(document.getElementById('evalSearch').value);
+  const filtered = EVALUATORS.filter(x=>norm(x.name).includes(q)||norm(x.kana).includes(q));
+  renderDrop('evalDrop', filtered, 'eval');
+}
+
+function filterDealer(){
+  const q = norm(document.getElementById('dealerSearch').value);
+  const pref = document.getElementById('prefFilter').value;
+  const filtered = DEALERS.filter(x=>(!q||norm(x.name).includes(q)||norm(x.kana).includes(q))&&(!pref||x.pref===pref));
+  renderDrop('dealerDrop', filtered, 'dealer');
+  if(q||pref) document.getElementById('dealerDrop').classList.add('open');
+}
+
+function renderDrop(dropId, list, type){
+  const drop = document.getElementById(dropId);
+  drop.innerHTML = '';
+  if(!list.length){drop.innerHTML='<div class="drop-none">見つかりません</div>';return;}
+  list.forEach(x=>{
+    const d = document.createElement('div');
+    d.className = 'drop-item';
+    d.innerHTML = type==='eval'?`${x.name}<span class="drop-sub">${x.role}</span>`:`${x.name}<span class="drop-sub">${x.pref}</span>`;
+    d.onmousedown = ()=>selectItem(type,x);
+    d.ontouchstart = ()=>selectItem(type,x);
+    drop.appendChild(d);
+  });
+}
+
+function openDrop(type){
+  clearTimeout(closeTimers[type]);
+  if(type==='eval') filterEval(); else filterDealer();
+  document.getElementById(type+'Drop').classList.add('open');
+}
+
+function closeDrop(type){
+  closeTimers[type] = setTimeout(()=>document.getElementById(type+'Drop').classList.remove('open'), 200);
+}
+
+function selectItem(type, x){
+  selected[type] = x;
+  const tag = document.getElementById(type+'Tag');
+  const label = type==='eval'?`${x.name}（${x.role}）`:`${x.name}（${x.pref}）`;
+  tag.innerHTML = `<span class="selected-tag">${label}<span class="clear-x" onclick="clearItem('${type}')">×</span></span>`;
+  document.getElementById(type==='eval'?'evalSearch':'dealerSearch').value = '';
+  document.getElementById(type+'Drop').classList.remove('open');
+  if(type==='eval'&&x.role){const m={'TD':'td','フロア':'floor','ピット':'pit'};document.getElementById('evalRole').value=m[x.role]||'';}
+}
+
+function clearItem(type){
+  selected[type] = null;
+  document.getElementById(type+'Tag').innerHTML = '';
+  document.getElementById(type==='eval'?'evalSearch':'dealerSearch').value = '';
+  if(type==='eval') document.getElementById('evalRole').value='';
+  if(type==='dealer') document.getElementById('prefFilter').value='';
+}
+
+function changeDeduct(key, delta){
+  deducts[key] = Math.max(0, deducts[key]+delta);
+  document.getElementById(key+'-count').textContent = deducts[key];
+}
+
+// ステップ管理
+const TITLES = ['基本情報','技術評価','人柄・減点'];
+const SUBS = ['ステップ 1 / 3','ステップ 2 / 3','ステップ 3 / 3'];
+
+function goTo(n){
+  if(n===1){
+    if(!selected.eval){alert('評価者を選択してください');return;}
+    if(!document.getElementById('evalRole').value){alert('ロールを選択してください');return;}
+    if(!selected.dealer){alert('ディーラーを選択してください');return;}
+  }
+  document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active',i===n));
+  for(let i=0;i<3;i++){
+    const d=document.getElementById('dot'+i);
+    d.classList.remove('active','done');
+    if(i===n) d.classList.add('active');
+    else if(i<n) d.classList.add('done');
+  }
+  document.getElementById('screenSub').textContent = SUBS[n];
+  window.scrollTo(0,0);
+}
+
+// 送信
+async function submitForm(){
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  // コメント収集
+  const comments = {};
+  document.querySelectorAll('textarea[data-comment]').forEach(t=>{comments[t.dataset.comment]=t.value.trim();});
+
+  // 送信データ構築
+  const allAxes = [...AXES.card,...AXES.chip,...AXES.game,...AXES.personality];
+  const scoreData = {};
+  allAxes.forEach(({key})=>scoreData[key]=ratings[key]||0);
+
+  const payload = {
+    datetime: dateStr,
+    evaluator_id: selected.eval.id,
+    evaluator_name: selected.eval.name,
+    evaluator_role: document.getElementById('evalRole').value,
+    dealer_id: selected.dealer.id,
+    dealer_name: selected.dealer.name,
+    dealer_pref: selected.dealer.pref,
+    ...scoreData,
+    comment_card: comments.card||'',
+    comment_chip: comments.chip||'',
+    comment_game: comments.game||'',
+    comment_personality: comments.personality||'',
+    comment_deduct: comments.deduct||'',
+    comment_overall: comments.overall||'',
+    deduct_mess: deducts.mess,
+    deduct_gossip: deducts.gossip,
+    deduct_other: deducts.other,
+  };
+
+  document.getElementById('loading').style.display='block';
+  document.getElementById('error-msg').style.display='none';
+
+  try {
+    await fetch(GAS_URL, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload),
+    });
+    document.getElementById('loading').style.display='none';
+    document.getElementById('toast').style.display='block';
+    setTimeout(()=>{
+      document.getElementById('toast').style.display='none';
+      resetForm();
+    }, 2500);
+  } catch(e){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('error-msg').style.display='block';
+  }
+}
+
+function resetForm(){
+  Object.keys(ratings).forEach(k=>ratings[k]=0);
+  Object.keys(deducts).forEach(k=>deducts[k]=0);
+  ['mess','gossip','other'].forEach(k=>document.getElementById(k+'-count').textContent='0');
+  document.querySelectorAll('textarea').forEach(t=>t.value='');
+  clearItem('eval'); clearItem('dealer');
+  rebuildAll();
+  goTo(0);
+}
+
+// 初期化
+initPrefSelect();
+rebuildAll();
+</script>
+</body>
+</html>
