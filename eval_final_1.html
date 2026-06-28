@@ -59,6 +59,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .toast{display:none;margin:1rem;padding:12px 16px;background:#dcfce7;border:1px solid #86efac;color:#166534;border-radius:8px;font-size:13px;text-align:center}
 .loading{display:none;margin:1rem;padding:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;font-size:13px;text-align:center}
 .error-msg{display:none;margin:1rem;padding:12px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:8px;font-size:13px}
+.radio-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.radio-item:last-child{border-bottom:none}
+.radio-item:active{background:#f5f5f0}
+.radio-circle{width:20px;height:20px;border-radius:50%;border:2px solid #ddd;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.radio-circle.checked{border-color:#3b82f6;background:#3b82f6}
+.radio-circle.checked::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
+.radio-label{font-size:13px;color:#1a1a1a;flex:1}
+.radio-sub{font-size:11px;color:#999;margin-left:4px}
+.radio-empty{padding:10px 12px;font-size:13px;color:#999}
 </style>
 </head>
 <body>
@@ -81,10 +90,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
     <div class="card-title">👤 評価者</div>
     <div class="search-wrap">
       <span class="search-ico">🔍</span>
-      <input class="search-input" id="evalSearch" placeholder="名前で検索..." autocomplete="off" oninput="filterEval()" onfocus="openDrop('eval')" onblur="scheduleClose('eval')">
+      <input class="search-input" id="evalSearch" placeholder="名前で検索..." autocomplete="off" oninput="filterEval()">
     </div>
-    <div class="dropdown" id="evalDrop"></div>
-    <div id="evalTag"></div>
+    <div id="evalRadioList" style="margin-top:8px;max-height:200px;overflow-y:auto"></div>
+    <div id="evalSelected" style="display:none;margin-top:8px;padding:8px 10px;background:#eff6ff;border-radius:8px;font-size:13px;color:#1d4ed8;display:flex;align-items:center;justify-content:space-between">
+      <span id="evalSelectedLabel"></span>
+      <span onclick="clearEval()" style="cursor:pointer;font-size:16px;color:#3b82f6">×</span>
+    </div>
     <select class="select-field" id="evalRole" style="margin-top:8px">
       <option value="">ロールを選択</option>
       <option value="td">TD</option>
@@ -97,13 +109,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
     <div class="card-title">🃏 評価するディーラー</div>
     <div class="search-wrap">
       <span class="search-ico">🔍</span>
-      <input class="search-input" id="dealerSearch" placeholder="名前で検索（ひらがなOK）..." autocomplete="off" oninput="filterDealer()" onfocus="openDrop('dealer')" onblur="scheduleClose('dealer')">
+      <input class="search-input" id="dealerSearch" placeholder="名前で検索（ひらがなOK）..." autocomplete="off" oninput="filterDealer()">
     </div>
     <select class="pref-select" id="prefFilter" onchange="filterDealer()">
       <option value="">都道府県で絞り込み</option>
     </select>
-    <div class="dropdown" id="dealerDrop"></div>
-    <div id="dealerTag"></div>
+    <div id="dealerRadioList" style="margin-top:8px;max-height:200px;overflow-y:auto"></div>
+    <div id="dealerSelected" style="display:none;margin-top:8px;padding:8px 10px;background:#eff6ff;border-radius:8px;font-size:13px;color:#1d4ed8;display:flex;align-items:center;justify-content:space-between">
+      <span id="dealerSelectedLabel"></span>
+      <span onclick="clearDealer()" style="cursor:pointer;font-size:16px;color:#3b82f6">×</span>
+    </div>
   </div>
   <div class="nav">
     <button class="btn primary" onclick="goTo(1)">次へ →</button>
@@ -351,220 +366,20 @@ let closeTimers = {};
 function toKana(s){return s.replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));}
 function norm(s){return toKana((s||'').toLowerCase());}
 
+  goTo(0);
+}
+
 // 都道府県プルダウン初期化
 function initPrefSelect(){
   const s = document.getElementById('prefFilter');
-  PREFS.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});
-}
-
-// 評価行を構築
-function buildRows(containerId, axisKey){
-  const el = document.getElementById(containerId);
-  el.innerHTML = '';
-  AXES[axisKey].forEach(({key, label, guide})=>{
-    if(ratings[key]===undefined) ratings[key]=0;
-    const div = document.createElement('div');
-    div.className = 'row';
-    div.id = 'row-'+key;
-    const guideHtml = guide.map((g,i)=>`<span class="guide-item" id="g-${key}-${i+1}">★${i+1}：${g}</span>`).join('');
-    div.innerHTML = `
-      <div class="row-top">
-        <div class="row-name">${label}</div>
-        <div class="stars" id="stars-${key}"></div>
-      </div>
-      <div class="guide" id="guide-${key}">${guideHtml}</div>`;
-    el.appendChild(div);
-    buildStarEl(key);
-  });
-}
-
-function buildStarEl(key){
-  const el = document.getElementById('stars-'+key);
-  if(!el) return;
-  el.innerHTML = '';
-  for(let i=1;i<=5;i++){
-    const s = document.createElement('span');
-    s.className = 'star'+(ratings[key]>=i?' on':'');
-    s.textContent = '★';
-    const v = i;
-    s.onclick = ()=>{ratings[key]=(ratings[key]===v)?0:v; buildStarEl(key); updateGuide(key);};
-    s.ontouchstart = ()=>{};
-    el.appendChild(s);
-  }
-  updateGuide(key);
-}
-
-function updateGuide(key){
-  const v = ratings[key];
-  for(let i=1;i<=5;i++){
-    const g = document.getElementById(`g-${key}-${i}`);
-    if(g) g.className = 'guide-item'+(v===i?' current':'');
-  }
-}
-
-function rebuildAll(){
-  buildRows('rows-card','card');
-  buildRows('rows-chip','chip');
-  buildRows('rows-game','game');
-  buildRows('rows-personality','personality');
-}
-
-// 検索・ドロップダウン
-function filterEval(){
-  const q = norm(document.getElementById('evalSearch').value);
-  const filtered = EVALUATORS.filter(x=>norm(x.name).includes(q)||norm(x.kana).includes(q));
-  renderDrop('evalDrop', filtered, 'eval');
-}
-
-function filterDealer(){
-  const q = norm(document.getElementById('dealerSearch').value);
-  const pref = document.getElementById('prefFilter').value;
-  const filtered = DEALERS.filter(x=>(!q||norm(x.name).includes(q)||norm(x.kana).includes(q))&&(!pref||x.pref===pref));
-  renderDrop('dealerDrop', filtered, 'dealer');
-  if(q||pref) document.getElementById('dealerDrop').classList.add('open');
-}
-
-function renderDrop(dropId, list, type){
-  const drop = document.getElementById(dropId);
-  drop.innerHTML = '';
-  if(!list.length){drop.innerHTML='<div class="drop-none">見つかりません</div>';return;}
-  list.forEach(x=>{
-    const d = document.createElement('div');
-    d.className = 'drop-item';
-    d.innerHTML = type==='eval'?`${x.name}<span class="drop-sub">${x.role}</span>`:`${x.name}<span class="drop-sub">${x.pref}</span>`;
-    d.addEventListener('mousedown', (e)=>{e.preventDefault();selectItem(type,x);});
-    d.addEventListener('touchend', (e)=>{e.preventDefault();selectItem(type,x);});
-    drop.appendChild(d);
-  });
-}
-
-function openDrop(type){
-  clearTimeout(closeTimers[type]);
-  if(type==='eval') filterEval(); else filterDealer();
-  document.getElementById(type+'Drop').classList.add('open');
-}
-
-function scheduleClose(type){
-  closeTimers[type] = setTimeout(()=>document.getElementById(type+'Drop').classList.remove('open'), 300);
-}
-
-function closeDrop(type){
-  document.getElementById(type+'Drop').classList.remove('open');
-}
-
-function selectItem(type, x){
-  clearTimeout(closeTimers[type]);
-  selected[type] = x;
-  const tag = document.getElementById(type+'Tag');
-  const label = type==='eval'?`${x.name}（${x.role}）`:`${x.name}（${x.pref}）`;
-  tag.innerHTML = `<span class="selected-tag">${label}<span class="clear-x" onclick="clearItem('${type}')">×</span></span>`;
-  document.getElementById(type==='eval'?'evalSearch':'dealerSearch').value = '';
-  document.getElementById(type+'Drop').classList.remove('open');
-  if(type==='eval'&&x.role){const m={'TD':'td','フロア':'floor','ピット':'pit','運営':'admin'};document.getElementById('evalRole').value=m[x.role]||'';}
-}
-
-function clearItem(type){
-  selected[type] = null;
-  document.getElementById(type+'Tag').innerHTML = '';
-  document.getElementById(type==='eval'?'evalSearch':'dealerSearch').value = '';
-  if(type==='eval') document.getElementById('evalRole').value='';
-  if(type==='dealer') document.getElementById('prefFilter').value='';
-}
-
-function changeDeduct(key, delta){
-  deducts[key] = Math.max(0, deducts[key]+delta);
-  document.getElementById(key+'-count').textContent = deducts[key];
-}
-
-// ステップ管理
-const TITLES = ['基本情報','技術評価','人柄・減点'];
-const SUBS = ['ステップ 1 / 3','ステップ 2 / 3','ステップ 3 / 3'];
-
-function goTo(n){
-  if(n===1){
-    if(!selected.eval){alert('評価者を選択してください');return;}
-    if(!document.getElementById('evalRole').value){alert('ロールを選択してください');return;}
-    if(!selected.dealer){alert('ディーラーを選択してください');return;}
-  }
-  document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active',i===n));
-  for(let i=0;i<3;i++){
-    const d=document.getElementById('dot'+i);
-    d.classList.remove('active','done');
-    if(i===n) d.classList.add('active');
-    else if(i<n) d.classList.add('done');
-  }
-  document.getElementById('screenSub').textContent = SUBS[n];
-  window.scrollTo(0,0);
-}
-
-// 送信
-async function submitForm(){
-  const now = new Date();
-  const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-  // コメント収集
-  const comments = {};
-  document.querySelectorAll('textarea[data-comment]').forEach(t=>{comments[t.dataset.comment]=t.value.trim();});
-
-  // 送信データ構築
-  const allAxes = [...AXES.card,...AXES.chip,...AXES.game,...AXES.personality];
-  const scoreData = {};
-  allAxes.forEach(({key})=>scoreData[key]=ratings[key]||0);
-
-  const payload = {
-    datetime: dateStr,
-    evaluator_id: selected.eval.id,
-    evaluator_name: selected.eval.name,
-    evaluator_role: document.getElementById('evalRole').value,
-    dealer_id: selected.dealer.id,
-    dealer_name: selected.dealer.name,
-    dealer_pref: selected.dealer.pref,
-    ...scoreData,
-    comment_card: comments.card||'',
-    comment_chip: comments.chip||'',
-    comment_game: comments.game||'',
-    comment_personality: comments.personality||'',
-    comment_deduct: comments.deduct||'',
-    comment_overall: comments.overall||'',
-    deduct_mess: deducts.mess,
-    deduct_gossip: deducts.gossip,
-    deduct_other: deducts.other,
-  };
-
-  document.getElementById('loading').style.display='block';
-  document.getElementById('error-msg').style.display='none';
-
-  try {
-    await fetch(GAS_URL, {
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload),
-    });
-    document.getElementById('loading').style.display='none';
-    document.getElementById('toast').style.display='block';
-    setTimeout(()=>{
-      document.getElementById('toast').style.display='none';
-      resetForm();
-    }, 2500);
-  } catch(e){
-    document.getElementById('loading').style.display='none';
-    document.getElementById('error-msg').style.display='block';
-  }
-}
-
-function resetForm(){
-  Object.keys(ratings).forEach(k=>ratings[k]=0);
-  Object.keys(deducts).forEach(k=>deducts[k]=0);
-  ['mess','gossip','other'].forEach(k=>document.getElementById(k+'-count').textContent='0');
-  document.querySelectorAll('textarea').forEach(t=>t.value='');
-  clearItem('eval'); clearItem('dealer');
-  rebuildAll();
-  goTo(0);
+  const prefs = [...new Set(DEALERS.map(d=>d.pref))].sort();
+  prefs.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});
 }
 
 // 初期化
 initPrefSelect();
+filterEval();
+filterDealer();
 rebuildAll();
 </script>
 </body>
