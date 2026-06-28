@@ -81,7 +81,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
     <div class="card-title">👤 評価者</div>
     <div class="search-wrap">
       <span class="search-ico">🔍</span>
-      <input class="search-input" id="evalSearch" placeholder="名前で検索..." autocomplete="off" oninput="filterEval()" onfocus="openDrop('eval')" onblur="closeDrop('eval')">
+      <input class="search-input" id="evalSearch" placeholder="名前で検索..." autocomplete="off" oninput="filterEval()" onfocus="openDrop('eval')" onblur="scheduleClose('eval')">
     </div>
     <div class="dropdown" id="evalDrop"></div>
     <div id="evalTag"></div>
@@ -97,7 +97,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
     <div class="card-title">🃏 評価するディーラー</div>
     <div class="search-wrap">
       <span class="search-ico">🔍</span>
-      <input class="search-input" id="dealerSearch" placeholder="名前で検索（ひらがなOK）..." autocomplete="off" oninput="filterDealer()" onfocus="openDrop('dealer')" onblur="closeDrop('dealer')">
+      <input class="search-input" id="dealerSearch" placeholder="名前で検索（ひらがなOK）..." autocomplete="off" oninput="filterDealer()" onfocus="openDrop('dealer')" onblur="scheduleClose('dealer')">
     </div>
     <select class="pref-select" id="prefFilter" onchange="filterDealer()">
       <option value="">都道府県で絞り込み</option>
@@ -432,8 +432,8 @@ function renderDrop(dropId, list, type){
     const d = document.createElement('div');
     d.className = 'drop-item';
     d.innerHTML = type==='eval'?`${x.name}<span class="drop-sub">${x.role}</span>`:`${x.name}<span class="drop-sub">${x.pref}</span>`;
-    d.onmousedown = ()=>selectItem(type,x);
-    d.ontouchstart = ()=>selectItem(type,x);
+    d.addEventListener('mousedown', (e)=>{e.preventDefault();selectItem(type,x);});
+    d.addEventListener('touchend', (e)=>{e.preventDefault();selectItem(type,x);});
     drop.appendChild(d);
   });
 }
@@ -444,11 +444,16 @@ function openDrop(type){
   document.getElementById(type+'Drop').classList.add('open');
 }
 
+function scheduleClose(type){
+  closeTimers[type] = setTimeout(()=>document.getElementById(type+'Drop').classList.remove('open'), 300);
+}
+
 function closeDrop(type){
-  closeTimers[type] = setTimeout(()=>document.getElementById(type+'Drop').classList.remove('open'), 200);
+  document.getElementById(type+'Drop').classList.remove('open');
 }
 
 function selectItem(type, x){
+  clearTimeout(closeTimers[type]);
   selected[type] = x;
   const tag = document.getElementById(type+'Tag');
   const label = type==='eval'?`${x.name}（${x.role}）`:`${x.name}（${x.pref}）`;
