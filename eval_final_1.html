@@ -7,7 +7,6 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;background:#f5f5f0;color:#1a1a1a;padding-bottom:3rem}
-.wrap{max-width:480px;margin:0 auto;padding:1rem}
 .header{background:#1a1a1a;color:#fff;padding:1rem;text-align:center;position:sticky;top:0;z-index:10}
 .header h1{font-size:15px;font-weight:500}
 .header .sub{font-size:11px;opacity:.6;margin-top:2px}
@@ -17,7 +16,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .step-dot.done{background:rgba(255,255,255,.7)}
 .screen{display:none}.screen.active{display:block}
 .card{background:#fff;border-radius:12px;padding:1rem;margin:1rem 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.card-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
 .row{padding:10px 0;border-bottom:1px solid #f0f0f0}
 .row:last-child{border-bottom:none}
 .row-top{display:flex;align-items:center;justify-content:space-between}
@@ -29,25 +28,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .guide-item{display:block;margin-bottom:1px}
 .guide-item.current{color:#2563eb;font-weight:500}
 .comment-area{width:100%;margin-top:8px;padding:8px 10px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:13px;resize:none;font-family:inherit}
-.select-field{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;margin-bottom:8px;-webkit-appearance:none}
-.search-wrap{position:relative;margin-bottom:6px}
-.search-input{width:100%;padding:10px 10px 10px 36px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;font-family:inherit}
-.search-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#aaa;font-size:14px}
-.pref-select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:13px;margin-bottom:6px;-webkit-appearance:none}
-.dropdown{border:1px solid #e5e5e5;border-radius:8px;background:#fff;max-height:200px;overflow-y:auto;display:none;box-shadow:0 4px 12px rgba(0,0,0,.1)}
-.dropdown.open{display:block}
-.drop-item{padding:10px 14px;font-size:14px;color:#1a1a1a;cursor:pointer;border-bottom:1px solid #f0f0f0}
-.drop-item:last-child{border-bottom:none}
-.drop-item:hover,.drop-item:active{background:#f5f5f0}
-.drop-sub{font-size:11px;color:#999;margin-left:8px}
-.drop-none{padding:10px 14px;font-size:13px;color:#aaa}
-.selected-tag{display:inline-flex;align-items:center;gap:8px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:20px;padding:5px 12px;font-size:13px;margin-top:4px}
-.clear-x{cursor:pointer;font-size:16px;line-height:1;color:#3b82f6}
+.select-field{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;-webkit-appearance:none}
+.search-input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;font-family:inherit;margin-bottom:8px}
+.pref-select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:13px;-webkit-appearance:none;margin-bottom:8px}
+.radio-list{max-height:220px;overflow-y:auto;border:1px solid #e5e5e5;border-radius:8px;background:#fff}
+.radio-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.radio-item:last-child{border-bottom:none}
+.radio-item:active{background:#f5f5f0}
+.radio-circle{width:22px;height:22px;border-radius:50%;border:2px solid #ddd;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.radio-circle.checked{border-color:#3b82f6;background:#3b82f6}
+.radio-dot{width:8px;height:8px;border-radius:50%;background:#fff;display:none}
+.radio-circle.checked .radio-dot{display:block}
+.radio-label{font-size:14px;color:#1a1a1a;flex:1}
+.radio-sub{font-size:11px;color:#999;margin-left:6px}
+.radio-empty{padding:12px 14px;font-size:13px;color:#999}
+.selected-tag{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:9px 12px;background:#eff6ff;border-radius:8px;font-size:13px;color:#1d4ed8}
+.selected-tag .clear{cursor:pointer;font-size:18px;color:#3b82f6;line-height:1}
 .deduct-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0}
 .deduct-row:last-child{border-bottom:none}
 .deduct-label{font-size:13px;color:#1a1a1a;flex:1}
 .counter{display:flex;align-items:center;gap:8px}
-.cnt-btn{width:30px;height:30px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.cnt-btn{width:32px;height:32px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 .cnt-btn.minus{color:#ef4444}
 .cnt-btn.plus{color:#22c55e}
 .cnt-val{min-width:20px;text-align:center;font-size:14px;font-weight:500}
@@ -59,15 +60,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .toast{display:none;margin:1rem;padding:12px 16px;background:#dcfce7;border:1px solid #86efac;color:#166534;border-radius:8px;font-size:13px;text-align:center}
 .loading{display:none;margin:1rem;padding:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;font-size:13px;text-align:center}
 .error-msg{display:none;margin:1rem;padding:12px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:8px;font-size:13px}
-.radio-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.radio-item:last-child{border-bottom:none}
-.radio-item:active{background:#f5f5f0}
-.radio-circle{width:20px;height:20px;border-radius:50%;border:2px solid #ddd;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.radio-circle.checked{border-color:#3b82f6;background:#3b82f6}
-.radio-circle.checked::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
-.radio-label{font-size:13px;color:#1a1a1a;flex:1}
-.radio-sub{font-size:11px;color:#999;margin-left:4px}
-.radio-empty{padding:10px 12px;font-size:13px;color:#999}
 </style>
 </head>
 <body>
@@ -82,22 +74,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
   </div>
 </div>
 
-<div class="wrap">
+<div style="max-width:480px;margin:0 auto;padding:0 1rem">
 
-<!-- ステップ1：基本情報 -->
+<!-- ステップ1 -->
 <div class="screen active" id="screen0">
   <div class="card">
     <div class="card-title">👤 評価者</div>
-    <div class="search-wrap">
-      <span class="search-ico">🔍</span>
-      <input class="search-input" id="evalSearch" placeholder="名前で検索..." autocomplete="off" oninput="filterEval()">
-    </div>
-    <div id="evalRadioList" style="margin-top:8px;max-height:200px;overflow-y:auto"></div>
-    <div id="evalSelected" style="display:none;margin-top:8px;padding:8px 10px;background:#eff6ff;border-radius:8px;font-size:13px;color:#1d4ed8;display:flex;align-items:center;justify-content:space-between">
+    <input class="search-input" id="evalSearch" placeholder="名前で検索..." oninput="filterEval()">
+    <div class="radio-list" id="evalRadioList"></div>
+    <div class="selected-tag" id="evalSelectedTag" style="display:none">
       <span id="evalSelectedLabel"></span>
-      <span onclick="clearEval()" style="cursor:pointer;font-size:16px;color:#3b82f6">×</span>
+      <span class="clear" onclick="clearEval()">×</span>
     </div>
-    <select class="select-field" id="evalRole" style="margin-top:8px">
+    <select class="select-field" id="evalRole" style="margin-top:10px">
       <option value="">ロールを選択</option>
       <option value="td">TD</option>
       <option value="floor">フロア</option>
@@ -107,17 +96,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
   </div>
   <div class="card">
     <div class="card-title">🃏 評価するディーラー</div>
-    <div class="search-wrap">
-      <span class="search-ico">🔍</span>
-      <input class="search-input" id="dealerSearch" placeholder="名前で検索（ひらがなOK）..." autocomplete="off" oninput="filterDealer()">
-    </div>
+    <input class="search-input" id="dealerSearch" placeholder="名前で検索（ひらがなOK）..." oninput="filterDealer()">
     <select class="pref-select" id="prefFilter" onchange="filterDealer()">
       <option value="">都道府県で絞り込み</option>
     </select>
-    <div id="dealerRadioList" style="margin-top:8px;max-height:200px;overflow-y:auto"></div>
-    <div id="dealerSelected" style="display:none;margin-top:8px;padding:8px 10px;background:#eff6ff;border-radius:8px;font-size:13px;color:#1d4ed8;display:flex;align-items:center;justify-content:space-between">
+    <div class="radio-list" id="dealerRadioList"></div>
+    <div class="selected-tag" id="dealerSelectedTag" style="display:none">
       <span id="dealerSelectedLabel"></span>
-      <span onclick="clearDealer()" style="cursor:pointer;font-size:16px;color:#3b82f6">×</span>
+      <span class="clear" onclick="clearDealer()">×</span>
     </div>
   </div>
   <div class="nav">
@@ -125,7 +111,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
   </div>
 </div>
 
-<!-- ステップ2：技術評価 -->
+<!-- ステップ2 -->
 <div class="screen" id="screen1">
   <p class="hint">気になった項目だけ選択してOK。未選択のまま送信できます。</p>
   <div class="card">
@@ -149,7 +135,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
   </div>
 </div>
 
-<!-- ステップ3：人柄・減点 -->
+<!-- ステップ3 -->
 <div class="screen" id="screen2">
   <p class="hint">気になった項目だけ選択してOK。未選択のまま送信できます。</p>
   <div class="card">
@@ -198,140 +184,129 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
   <div class="error-msg" id="error-msg">送信に失敗しました。もう一度お試しください。</div>
 </div>
 
-</div><!-- /wrap -->
+</div>
 
 <script>
-// =============================
-// ★ 設定：ここだけ変更してください
-// =============================
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxgjTsiJ47Dk3k5V5PYXehswVhvbZqSuNBhAaVG3iBI0Qq8uTH03YB_uCdM0Fpig2g/exec'; // Google Apps ScriptのURLをここに貼る
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxgjTsiJ47Dk3k5V5PYXehswVhvbZqSuNBhAaVG3iBI0Qq8uTH03YB_uCdM0Fpig2g/exec';
 
-// =============================
-// ディーラー・評価者リスト（運営が追加・編集）
-// =============================
 const EVALUATORS = [
-  {id:"E01", name:"いつか", kana:"いつか", role:"TD"},
+  {id:"E01", name:"いつか",      kana:"いつか",      role:"TD"},
   {id:"E02", name:"ぷりにょろた", kana:"ぷりにょろた", role:"TD"},
-  {id:"E03", name:"たくみ", kana:"たくみ", role:"TD"},
-  {id:"E04", name:"たいが", kana:"たいが", role:"TD"},
-  {id:"E05", name:"saki", kana:"さき", role:"ピット"},
-  {id:"E06", name:"すな", kana:"すな", role:"ピット"},
-  {id:"E07", name:"福井", kana:"ふくい", role:"運営"},
-  {id:"E08", name:"こーき", kana:"こーき", role:"運営"},
+  {id:"E03", name:"たくみ",      kana:"たくみ",      role:"TD"},
+  {id:"E04", name:"たいが",      kana:"たいが",      role:"TD"},
+  {id:"E05", name:"saki",        kana:"さき",        role:"ピット"},
+  {id:"E06", name:"すな",        kana:"すな",        role:"ピット"},
+  {id:"E07", name:"福井",        kana:"ふくい",      role:"運営"},
+  {id:"E08", name:"こーき",      kana:"こーき",      role:"運営"},
 ];
 
 const DEALERS = [
-  {id:"D001", name:"いつか", kana:"いつか", pref:"大阪府"},
+  {id:"D001", name:"いつか",      kana:"いつか",      pref:"大阪府"},
   {id:"D002", name:"ぷりにょろた", kana:"ぷりにょろた", pref:"北海道"},
-  {id:"D003", name:"たくみ", kana:"たくみ", pref:"東京都"},
-  {id:"D004", name:"たいが", kana:"たいが", pref:"東京都"},
-  {id:"D005", name:"紅音", kana:"紅音", pref:"東京都"},
-  {id:"D006", name:"ごじら", kana:"ごじら", pref:"東京都"},
-  {id:"D007", name:"あい", kana:"あい", pref:"東京都"},
-  {id:"D008", name:"よしくん", kana:"よしくん", pref:"東京都"},
-  {id:"D009", name:"ふるぽん", kana:"ふるぽん", pref:"東京都"},
-  {id:"D010", name:"もも", kana:"もも", pref:"福岡県"},
-  {id:"D011", name:"あやね", kana:"あやね", pref:"福岡県"},
-  {id:"D012", name:"龍", kana:"龍", pref:"大阪府"},
-  {id:"D013", name:"mai(大阪)", kana:"mai(大阪)", pref:"大阪府"},
-  {id:"D014", name:"りう", kana:"りう", pref:"大阪府"},
-  {id:"D015", name:"ゆあさ", kana:"ゆあさ", pref:"大阪府"},
-  {id:"D016", name:"kyon", kana:"kyon", pref:"大阪府"},
-  {id:"D017", name:"ゆうと", kana:"ゆうと", pref:"大阪府"},
-  {id:"D018", name:"たま", kana:"たま", pref:"大阪府"},
-  {id:"D019", name:"なつき", kana:"なつき", pref:"兵庫県"},
-  {id:"D020", name:"ピース", kana:"ピース", pref:"佐賀県"},
-  {id:"D021", name:"はるな(福岡)", kana:"はるな(福岡)", pref:"福岡県"},
-  {id:"D022", name:"まふちゃん", kana:"まふちゃん", pref:"愛知県"},
-  {id:"D023", name:"ふみ", kana:"ふみ", pref:"愛知県"},
-  {id:"D024", name:"こたろう", kana:"こたろう", pref:"愛知県"},
-  {id:"D025", name:"まい(愛知)", kana:"まい(愛知)", pref:"愛知県"},
-  {id:"D026", name:"かーふ", kana:"かーふ", pref:"愛知県"},
-  {id:"D027", name:"ぷむむ", kana:"ぷむむ", pref:"京都府"},
-  {id:"D028", name:"りり", kana:"りり", pref:"大阪府"},
+  {id:"D003", name:"たくみ",      kana:"たくみ",      pref:"東京都"},
+  {id:"D004", name:"たいが",      kana:"たいが",      pref:"東京都"},
+  {id:"D005", name:"紅音",        kana:"くおん",      pref:"東京都"},
+  {id:"D006", name:"ごじら",      kana:"ごじら",      pref:"東京都"},
+  {id:"D007", name:"あい",        kana:"あい",        pref:"東京都"},
+  {id:"D008", name:"よしくん",    kana:"よしくん",    pref:"東京都"},
+  {id:"D009", name:"ふるぽん",    kana:"ふるぽん",    pref:"東京都"},
+  {id:"D010", name:"もも",        kana:"もも",        pref:"福岡県"},
+  {id:"D011", name:"あやね",      kana:"あやね",      pref:"福岡県"},
+  {id:"D012", name:"龍",          kana:"りゅう",      pref:"大阪府"},
+  {id:"D013", name:"mai(大阪)",   kana:"まい",        pref:"大阪府"},
+  {id:"D014", name:"りう",        kana:"りう",        pref:"大阪府"},
+  {id:"D015", name:"ゆあさ",      kana:"ゆあさ",      pref:"大阪府"},
+  {id:"D016", name:"kyon",        kana:"きょん",      pref:"大阪府"},
+  {id:"D017", name:"ゆうと",      kana:"ゆうと",      pref:"大阪府"},
+  {id:"D018", name:"たま",        kana:"たま",        pref:"大阪府"},
+  {id:"D019", name:"なつき",      kana:"なつき",      pref:"兵庫県"},
+  {id:"D020", name:"ピース",      kana:"ぴーす",      pref:"佐賀県"},
+  {id:"D021", name:"はるな(福岡)", kana:"はるな",     pref:"福岡県"},
+  {id:"D022", name:"まふちゃん",  kana:"まふちゃん",  pref:"愛知県"},
+  {id:"D023", name:"ふみ",        kana:"ふみ",        pref:"愛知県"},
+  {id:"D024", name:"こたろう",    kana:"こたろう",    pref:"愛知県"},
+  {id:"D025", name:"まい(愛知)",  kana:"まい",        pref:"愛知県"},
+  {id:"D026", name:"かーふ",      kana:"かーふ",      pref:"愛知県"},
+  {id:"D027", name:"ぷむむ",      kana:"ぷむむ",      pref:"京都府"},
+  {id:"D028", name:"りり",        kana:"りり",        pref:"大阪府"},
   {id:"D029", name:"まーらいおん", kana:"まーらいおん", pref:"大阪府"},
-  {id:"D030", name:"うみ", kana:"うみ", pref:"大阪府"},
-  {id:"D031", name:"こし", kana:"こし", pref:"大阪府"},
-  {id:"D032", name:"kk", kana:"kk", pref:"大阪府"},
-  {id:"D033", name:"JURIA", kana:"JURIA", pref:"大阪府"},
-  {id:"D034", name:"蓮見生活感", kana:"蓮見生活感", pref:"大阪府"},
-  {id:"D035", name:"かのん", kana:"かのん", pref:"大阪府"},
-  {id:"D036", name:"sua", kana:"sua", pref:"大阪府"},
-  {id:"D037", name:"ao", kana:"ao", pref:"大阪府"},
-  {id:"D038", name:"たかまる", kana:"たかまる", pref:"大阪府"},
-  {id:"D039", name:"kyu.", kana:"kyu.", pref:"大阪府"},
-  {id:"D040", name:"れん", kana:"れん", pref:"大阪府"},
-  {id:"D041", name:"ぬん", kana:"ぬん", pref:"大阪府"},
-  {id:"D042", name:"KIMUTI", kana:"KIMUTI", pref:"大阪府"},
-  {id:"D043", name:"アキヤマ", kana:"アキヤマ", pref:"大阪府"},
-  {id:"D044", name:"キョウ", kana:"キョウ", pref:"大阪府"},
-  {id:"D045", name:"うりゅう", kana:"うりゅう", pref:"大阪府"},
-  {id:"D046", name:"高橋", kana:"高橋", pref:"大阪府"},
-  {id:"D047", name:"sakkii", kana:"sakkii", pref:"兵庫県"},
-  {id:"D048", name:"ゆう", kana:"ゆう", pref:"兵庫県"},
-  {id:"D049", name:"かんちゃん", kana:"かんちゃん", pref:"奈良県"},
-  {id:"D050", name:"BE", kana:"BE", pref:"大阪府"},
-  {id:"D051", name:"たくみ(兵庫)", kana:"たくみ(兵庫)", pref:"兵庫県"},
-  {id:"D052", name:"yuto@KINGS", kana:"yuto@KINGS", pref:"奈良県"},
-  {id:"D053", name:"いこいこ", kana:"いこいこ", pref:"兵庫県"},
-  {id:"D054", name:"レイ", kana:"レイ", pref:"滋賀県"},
-  {id:"D055", name:"バッキー", kana:"バッキー", pref:"大阪府"},
-  {id:"D056", name:"リン", kana:"リン", pref:"大阪府"},
-  {id:"D057", name:"ぼち", kana:"ぼち", pref:"大阪府"},
-  {id:"D058", name:"つよし", kana:"つよし", pref:"大阪府"},
-  {id:"D059", name:"しゅんと", kana:"しゅんと", pref:"大阪府"},
-  {id:"D060", name:"mii", kana:"mii", pref:"大阪府"},
-  {id:"D061", name:"4iu", kana:"4iu", pref:"大阪府"},
-  {id:"D062", name:"紫月", kana:"紫月", pref:"大阪府"},
-  {id:"D063", name:"かず", kana:"かず", pref:"大阪府"},
-  {id:"D064", name:"ゆづき", kana:"ゆづき", pref:"大阪府"},
-  {id:"D065", name:"ぴこ", kana:"ぴこ", pref:"兵庫県"},
-  {id:"D066", name:"あおい", kana:"あおい", pref:"奈良県"},
-  {id:"D067", name:"mikuri", kana:"mikuri", pref:"京都府"},
-  {id:"D068", name:"Hiro", kana:"Hiro", pref:"東京都"},
-  {id:"D069", name:"yuni", kana:"yuni", pref:"福岡県"},
-  {id:"D070", name:"みつき", kana:"みつき", pref:"福岡県"},
-  {id:"D071", name:"もか", kana:"もか", pref:"愛知県"},
-  {id:"D072", name:"KENT", kana:"KENT", pref:"愛知県"},
-  {id:"D073", name:"日和", kana:"日和", pref:"京都府"},
-  {id:"D074", name:"ゆめ", kana:"ゆめ", pref:"大阪府"},
-  {id:"D075", name:"かじゅ", kana:"かじゅ", pref:"大阪府"},
-  {id:"D076", name:"みう", kana:"みう", pref:"大阪府"},
-  {id:"D077", name:"なみ", kana:"なみ", pref:"大阪府"},
-  {id:"D078", name:"れんか", kana:"れんか", pref:"大阪府"},
-  {id:"D079", name:"はるな(大阪)", kana:"はるな(大阪)", pref:"大阪府"},
-  {id:"D080", name:"もと", kana:"もと", pref:"愛知県"},
-  {id:"D081", name:"たまねぎ", kana:"たまねぎ", pref:"大阪府"},
-  {id:"D082", name:"そうた", kana:"そうた", pref:"大阪府"},
-  {id:"D083", name:"カイト", kana:"カイト", pref:"滋賀県"},
-  {id:"D084", name:"asuka", kana:"asuka", pref:"大阪府"},
-  {id:"D085", name:"373", kana:"373", pref:"大阪府"},
-  {id:"D086", name:"ももせ", kana:"ももせ", pref:"大阪府"},
-  {id:"D087", name:"コウノ", kana:"コウノ", pref:"大阪府"},
-  {id:"D088", name:"saki", kana:"saki", pref:"大阪府"},
-  {id:"D089", name:"すな", kana:"すな", pref:"大阪府"},
-  {id:"D090", name:"7", kana:"7", pref:"大阪府"},
-  {id:"D091", name:"せーが", kana:"せーが", pref:"大阪府"},
-  {id:"D092", name:"わかは", kana:"わかは", pref:"大阪府"},
-  {id:"D093", name:"つかさ", kana:"つかさ", pref:"大阪府"},
-  {id:"D094", name:"奏", kana:"奏", pref:"大阪府"},
-  {id:"D095", name:"あゆたん", kana:"あゆたん", pref:"大阪府"},
-  {id:"D096", name:"ヘジョ", kana:"ヘジョ", pref:"大阪府"},
-  {id:"D097", name:"37", kana:"37", pref:"大阪府"},
-  {id:"D098", name:"ふるちゃん", kana:"ふるちゃん", pref:"大阪府"},
-  {id:"D099", name:"いっしー", kana:"いっしー", pref:"大阪府"},
-  {id:"D100", name:"にこ", kana:"にこ", pref:"大阪府"},
-  {id:"D101", name:"えいな", kana:"えいな", pref:"大阪府"},
-  {id:"D102", name:"おしょこ", kana:"おしょこ", pref:"兵庫県"},
-  {id:"D103", name:"龍角散", kana:"龍角散", pref:"大阪府"},
-  {id:"D104", name:"マツモト", kana:"マツモト", pref:"大阪府"},
+  {id:"D030", name:"うみ",        kana:"うみ",        pref:"大阪府"},
+  {id:"D031", name:"こし",        kana:"こし",        pref:"大阪府"},
+  {id:"D032", name:"kk",          kana:"けーけー",    pref:"大阪府"},
+  {id:"D033", name:"JURIA",       kana:"じゅりあ",    pref:"大阪府"},
+  {id:"D034", name:"蓮見生活感",  kana:"はすみせいかつかん", pref:"大阪府"},
+  {id:"D035", name:"かのん",      kana:"かのん",      pref:"大阪府"},
+  {id:"D036", name:"sua",         kana:"すあ",        pref:"大阪府"},
+  {id:"D037", name:"ao",          kana:"あお",        pref:"大阪府"},
+  {id:"D038", name:"たかまる",    kana:"たかまる",    pref:"大阪府"},
+  {id:"D039", name:"kyu.",        kana:"きゅう",      pref:"大阪府"},
+  {id:"D040", name:"れん",        kana:"れん",        pref:"大阪府"},
+  {id:"D041", name:"ぬん",        kana:"ぬん",        pref:"大阪府"},
+  {id:"D042", name:"KIMUTI",      kana:"きむち",      pref:"大阪府"},
+  {id:"D043", name:"アキヤマ",    kana:"あきやま",    pref:"大阪府"},
+  {id:"D044", name:"キョウ",      kana:"きょう",      pref:"大阪府"},
+  {id:"D045", name:"うりゅう",    kana:"うりゅう",    pref:"大阪府"},
+  {id:"D046", name:"高橋",        kana:"たかはし",    pref:"大阪府"},
+  {id:"D047", name:"sakkii",      kana:"さっきー",    pref:"兵庫県"},
+  {id:"D048", name:"ゆう",        kana:"ゆう",        pref:"兵庫県"},
+  {id:"D049", name:"かんちゃん",  kana:"かんちゃん",  pref:"奈良県"},
+  {id:"D050", name:"BE",          kana:"べー",        pref:"大阪府"},
+  {id:"D051", name:"たくみ(兵庫)", kana:"たくみ",     pref:"兵庫県"},
+  {id:"D052", name:"yuto@KINGS",  kana:"ゆうと",      pref:"奈良県"},
+  {id:"D053", name:"いこいこ",    kana:"いこいこ",    pref:"兵庫県"},
+  {id:"D054", name:"レイ",        kana:"れい",        pref:"滋賀県"},
+  {id:"D055", name:"バッキー",    kana:"ばっきー",    pref:"大阪府"},
+  {id:"D056", name:"リン",        kana:"りん",        pref:"大阪府"},
+  {id:"D057", name:"ぼち",        kana:"ぼち",        pref:"大阪府"},
+  {id:"D058", name:"つよし",      kana:"つよし",      pref:"大阪府"},
+  {id:"D059", name:"しゅんと",    kana:"しゅんと",    pref:"大阪府"},
+  {id:"D060", name:"mii",         kana:"みー",        pref:"大阪府"},
+  {id:"D061", name:"4iu",         kana:"よいう",      pref:"大阪府"},
+  {id:"D062", name:"紫月",        kana:"しづき",      pref:"大阪府"},
+  {id:"D063", name:"かず",        kana:"かず",        pref:"大阪府"},
+  {id:"D064", name:"ゆづき",      kana:"ゆづき",      pref:"大阪府"},
+  {id:"D065", name:"ぴこ",        kana:"ぴこ",        pref:"兵庫県"},
+  {id:"D066", name:"あおい",      kana:"あおい",      pref:"奈良県"},
+  {id:"D067", name:"mikuri",      kana:"みくり",      pref:"京都府"},
+  {id:"D068", name:"Hiro",        kana:"ひろ",        pref:"東京都"},
+  {id:"D069", name:"yuni",        kana:"ゆに",        pref:"福岡県"},
+  {id:"D070", name:"みつき",      kana:"みつき",      pref:"福岡県"},
+  {id:"D071", name:"もか",        kana:"もか",        pref:"愛知県"},
+  {id:"D072", name:"KENT",        kana:"けんと",      pref:"愛知県"},
+  {id:"D073", name:"日和",        kana:"ひより",      pref:"京都府"},
+  {id:"D074", name:"ゆめ",        kana:"ゆめ",        pref:"大阪府"},
+  {id:"D075", name:"かじゅ",      kana:"かじゅ",      pref:"大阪府"},
+  {id:"D076", name:"みう",        kana:"みう",        pref:"大阪府"},
+  {id:"D077", name:"なみ",        kana:"なみ",        pref:"大阪府"},
+  {id:"D078", name:"れんか",      kana:"れんか",      pref:"大阪府"},
+  {id:"D079", name:"はるな(大阪)", kana:"はるな",     pref:"大阪府"},
+  {id:"D080", name:"もと",        kana:"もと",        pref:"愛知県"},
+  {id:"D081", name:"たまねぎ",    kana:"たまねぎ",    pref:"大阪府"},
+  {id:"D082", name:"そうた",      kana:"そうた",      pref:"大阪府"},
+  {id:"D083", name:"カイト",      kana:"かいと",      pref:"滋賀県"},
+  {id:"D084", name:"asuka",       kana:"あすか",      pref:"大阪府"},
+  {id:"D085", name:"373",         kana:"みなみ",      pref:"大阪府"},
+  {id:"D086", name:"ももせ",      kana:"ももせ",      pref:"大阪府"},
+  {id:"D087", name:"コウノ",      kana:"こうの",      pref:"大阪府"},
+  {id:"D088", name:"saki",        kana:"さき",        pref:"大阪府"},
+  {id:"D089", name:"すな",        kana:"すな",        pref:"大阪府"},
+  {id:"D090", name:"7",           kana:"なな",        pref:"大阪府"},
+  {id:"D091", name:"せーが",      kana:"せーが",      pref:"大阪府"},
+  {id:"D092", name:"わかは",      kana:"わかは",      pref:"大阪府"},
+  {id:"D093", name:"つかさ",      kana:"つかさ",      pref:"大阪府"},
+  {id:"D094", name:"奏",          kana:"かなで",      pref:"大阪府"},
+  {id:"D095", name:"あゆたん",    kana:"あゆたん",    pref:"大阪府"},
+  {id:"D096", name:"ヘジョ",      kana:"へじょ",      pref:"大阪府"},
+  {id:"D097", name:"37",          kana:"みな",        pref:"大阪府"},
+  {id:"D098", name:"ふるちゃん",  kana:"ふるちゃん",  pref:"大阪府"},
+  {id:"D099", name:"いっしー",    kana:"いっしー",    pref:"大阪府"},
+  {id:"D100", name:"にこ",        kana:"にこ",        pref:"大阪府"},
+  {id:"D101", name:"えいな",      kana:"えいな",      pref:"大阪府"},
+  {id:"D102", name:"おしょこ",    kana:"おしょこ",    pref:"兵庫県"},
+  {id:"D103", name:"龍角散",      kana:"りゅうかくさん", pref:"大阪府"},
+  {id:"D104", name:"マツモト",    kana:"まつもと",    pref:"大阪府"},
 ];
 
-const PREFS = [...new Set(DEALERS.map(d=>d.pref))].sort();
-
-// =============================
-// 評価項目・基準定義
-// =============================
 const AXES = {
   card:[
     {key:'shuffle',   label:'シャッフルの正確さ', guide:['毎回ミスがある','時々ミスや雑さが目立つ','平均的にこなせる','安定して正確・スムーズ','完璧・お手本レベル']},
@@ -351,29 +326,207 @@ const AXES = {
     {key:'report',  label:'フロアへの状況報告', guide:['報告できない・状況把握不可','報告が遅い・情報が不正確','最低限の報告はできる','素早く正確に報告できる','的確・簡潔・即座に状況共有']},
   ],
   personality:[
-    {key:'greeting',   label:'挨拶・礼儀',       guide:['挨拶がない・態度が悪い','挨拶が不十分・受け身','普通に挨拶できる','自発的に明るく挨拶できる','誰に対しても常に完璧な礼儀']},
-    {key:'service',    label:'お客様との接客',   guide:['お客様対応に問題がある','接客がやや消極的','普通に対応できる','自然な会話・お客様が喜ぶ','場を盛り上げ指名・リピートされる']},
-    {key:'obedience',  label:'指示への素直さ',   guide:['指示を無視・反発する','時々素直に従えない','指示通りに動ける','素直に即動ける・確認も丁寧','先読みして動ける・指示不要なレベル']},
-    {key:'teamwork',   label:'チームへの協力度', guide:['協力しない・自分本位','言われたことだけやる','普通に協力できる','積極的に周りをサポート','率先してチームを引っ張る']},
+    {key:'greeting',  label:'挨拶・礼儀',       guide:['挨拶がない・態度が悪い','挨拶が不十分・受け身','普通に挨拶できる','自発的に明るく挨拶できる','誰に対しても常に完璧な礼儀']},
+    {key:'service',   label:'お客様との接客',   guide:['お客様対応に問題がある','接客がやや消極的','普通に対応できる','自然な会話・お客様が喜ぶ','場を盛り上げ指名・リピートされる']},
+    {key:'obedience', label:'指示への素直さ',   guide:['指示を無視・反発する','時々素直に従えない','指示通りに動ける','素直に即動ける・確認も丁寧','先読みして動ける・指示不要なレベル']},
+    {key:'teamwork',  label:'チームへの協力度', guide:['協力しない・自分本位','言われたことだけやる','普通に協力できる','積極的に周りをサポート','率先してチームを引っ張る']},
   ],
 };
 
 const ratings = {};
 const deducts = {mess:0, gossip:0, other:0};
 const selected = {eval:null, dealer:null};
-let closeTimers = {};
 
-function toKana(s){return s.replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));}
-function norm(s){return toKana((s||'').toLowerCase());}
-
-  goTo(0);
-}
+const toKana = s => s.replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0)+0x60));
+const norm = s => toKana((s||'').toLowerCase());
 
 // 都道府県プルダウン初期化
 function initPrefSelect(){
   const s = document.getElementById('prefFilter');
   const prefs = [...new Set(DEALERS.map(d=>d.pref))].sort();
   prefs.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});
+}
+
+// ラジオリスト描画
+function renderRadioList(containerId, list, type){
+  const el = document.getElementById(containerId);
+  if(!list.length){el.innerHTML='<div class="radio-empty">見つかりません</div>';return;}
+  el.innerHTML='';
+  list.forEach(x=>{
+    const isChecked = type==='eval'?(selected.eval&&selected.eval.id===x.id):(selected.dealer&&selected.dealer.id===x.id);
+    const sub = type==='eval'?x.role:x.pref;
+    const div = document.createElement('div');
+    div.className='radio-item';
+    div.innerHTML=`
+      <div class="radio-circle ${isChecked?'checked':''}" id="rc-${type}-${x.id}">
+        <div class="radio-dot"></div>
+      </div>
+      <div class="radio-label">${x.name}<span class="radio-sub">${sub}</span></div>`;
+    div.onclick=()=>selectRadio(type, x);
+    el.appendChild(div);
+  });
+}
+
+function selectRadio(type, x){
+  selected[type] = x;
+  // ラジオ更新
+  document.querySelectorAll(`[id^="rc-${type}-"]`).forEach(el=>el.classList.remove('checked'));
+  const target = document.getElementById(`rc-${type}-${x.id}`);
+  if(target) target.classList.add('checked');
+  // 選択タグ表示
+  const label = type==='eval'?`✓ ${x.name}（${x.role}）`:`✓ ${x.name}（${x.pref}）`;
+  document.getElementById(type+'SelectedLabel').textContent = label;
+  document.getElementById(type+'SelectedTag').style.display = 'flex';
+  // ロール自動セット
+  if(type==='eval'&&x.role){
+    const m={'TD':'td','フロア':'floor','ピット':'pit','運営':'admin'};
+    document.getElementById('evalRole').value=m[x.role]||'';
+  }
+}
+
+function clearEval(){
+  selected.eval=null;
+  document.getElementById('evalSelectedTag').style.display='none';
+  document.getElementById('evalSearch').value='';
+  document.getElementById('evalRole').value='';
+  filterEval();
+}
+
+function clearDealer(){
+  selected.dealer=null;
+  document.getElementById('dealerSelectedTag').style.display='none';
+  document.getElementById('dealerSearch').value='';
+  document.getElementById('prefFilter').value='';
+  filterDealer();
+}
+
+function filterEval(){
+  const q = norm(document.getElementById('evalSearch').value);
+  const filtered = EVALUATORS.filter(x=>!q||norm(x.name).includes(q)||norm(x.kana).includes(q));
+  renderRadioList('evalRadioList', filtered, 'eval');
+}
+
+function filterDealer(){
+  const q = norm(document.getElementById('dealerSearch').value);
+  const pref = document.getElementById('prefFilter').value;
+  const filtered = DEALERS.filter(x=>(!q||norm(x.name).includes(q)||norm(x.kana).includes(q))&&(!pref||x.pref===pref));
+  renderRadioList('dealerRadioList', filtered, 'dealer');
+}
+
+// 評価行を構築
+function buildRows(containerId, axisKey){
+  const el = document.getElementById(containerId);
+  el.innerHTML='';
+  AXES[axisKey].forEach(({key,label,guide})=>{
+    if(ratings[key]===undefined) ratings[key]=0;
+    const div = document.createElement('div');
+    div.className='row';
+    const guideHtml = guide.map((g,i)=>`<span class="guide-item" id="g-${key}-${i+1}">★${i+1}：${g}</span>`).join('');
+    div.innerHTML=`
+      <div class="row-top">
+        <div class="row-name">${label}</div>
+        <div class="stars" id="stars-${key}"></div>
+      </div>
+      <div class="guide" id="guide-${key}">${guideHtml}</div>`;
+    el.appendChild(div);
+    buildStarEl(key);
+  });
+}
+
+function buildStarEl(key){
+  const el = document.getElementById('stars-'+key);
+  if(!el) return;
+  el.innerHTML='';
+  for(let i=1;i<=5;i++){
+    const s = document.createElement('span');
+    s.className='star'+(ratings[key]>=i?' on':'');
+    s.textContent='★';
+    const v=i;
+    s.onclick=()=>{ratings[key]=(ratings[key]===v)?0:v; buildStarEl(key); updateGuide(key);};
+    el.appendChild(s);
+  }
+  updateGuide(key);
+}
+
+function updateGuide(key){
+  const v=ratings[key];
+  for(let i=1;i<=5;i++){
+    const g=document.getElementById(`g-${key}-${i}`);
+    if(g) g.className='guide-item'+(v===i?' current':'');
+  }
+}
+
+function rebuildAll(){
+  buildRows('rows-card','card');
+  buildRows('rows-chip','chip');
+  buildRows('rows-game','game');
+  buildRows('rows-personality','personality');
+}
+
+function changeDeduct(key, delta){
+  deducts[key]=Math.max(0,deducts[key]+delta);
+  document.getElementById(key+'-count').textContent=deducts[key];
+}
+
+const SUBS=['ステップ 1 / 3','ステップ 2 / 3','ステップ 3 / 3'];
+
+function goTo(n){
+  if(n===1){
+    if(!selected.eval){alert('評価者を選択してください');return;}
+    if(!document.getElementById('evalRole').value){alert('ロールを選択してください');return;}
+    if(!selected.dealer){alert('ディーラーを選択してください');return;}
+  }
+  document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active',i===n));
+  for(let i=0;i<3;i++){
+    const d=document.getElementById('dot'+i);
+    d.classList.remove('active','done');
+    if(i===n) d.classList.add('active');
+    else if(i<n) d.classList.add('done');
+  }
+  document.getElementById('screenSub').textContent=SUBS[n];
+  window.scrollTo(0,0);
+}
+
+async function submitForm(){
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const comments={};
+  document.querySelectorAll('textarea[data-comment]').forEach(t=>{comments[t.dataset.comment]=t.value.trim();});
+  const allAxes=[...AXES.card,...AXES.chip,...AXES.game,...AXES.personality];
+  const scoreData={};
+  allAxes.forEach(({key})=>scoreData[key]=ratings[key]||0);
+  const payload={
+    datetime:dateStr,
+    evaluator_id:selected.eval.id, evaluator_name:selected.eval.name,
+    evaluator_role:document.getElementById('evalRole').value,
+    dealer_id:selected.dealer.id, dealer_name:selected.dealer.name, dealer_pref:selected.dealer.pref,
+    ...scoreData,
+    comment_card:comments.card||'', comment_chip:comments.chip||'',
+    comment_game:comments.game||'', comment_personality:comments.personality||'',
+    comment_deduct:comments.deduct||'', comment_overall:comments.overall||'',
+    deduct_mess:deducts.mess, deduct_gossip:deducts.gossip, deduct_other:deducts.other,
+  };
+  document.getElementById('loading').style.display='block';
+  document.getElementById('error-msg').style.display='none';
+  try {
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    document.getElementById('loading').style.display='none';
+    document.getElementById('toast').style.display='block';
+    setTimeout(()=>{document.getElementById('toast').style.display='none';resetForm();},2500);
+  } catch(e){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('error-msg').style.display='block';
+  }
+}
+
+function resetForm(){
+  Object.keys(ratings).forEach(k=>ratings[k]=0);
+  Object.keys(deducts).forEach(k=>deducts[k]=0);
+  ['mess','gossip','other'].forEach(k=>document.getElementById(k+'-count').textContent='0');
+  document.querySelectorAll('textarea').forEach(t=>t.value='');
+  clearEval(); clearDealer();
+  rebuildAll();
+  goTo(0);
 }
 
 // 初期化
