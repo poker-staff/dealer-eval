@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ディーラー管理画面【運営専用】</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;background:#f5f5f0;color:#1a1a1a;padding-bottom:3rem}
+.header{background:#1a1a1a;color:#fff;padding:1rem;text-align:center;position:sticky;top:0;z-index:10}
+.header h1{font-size:15px;font-weight:500}
+.header .sub{font-size:11px;opacity:.6;margin-top:2px}
+.wrap{max-width:480px;margin:0 auto;padding:1rem}
+.screen{display:none}.screen.active{display:block}
+.card{background:#fff;border-radius:12px;padding:1rem;margin:0.75rem 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;font-weight:600}
+.search-row{display:flex;gap:8px;margin-bottom:8px}
+.search-input{flex:1;padding:9px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;font-family:inherit}
+.pref-sel{padding:9px 8px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:12px;max-width:110px;-webkit-appearance:none}
+.sort-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sort-btn{padding:5px 10px;border-radius:20px;border:1px solid #e5e5e5;background:#fff;color:#666;font-size:11px;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.sort-btn.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.dealer-item{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.dealer-item:active{background:#f9f9f9}
+.avatar{width:42px;height:42px;border-radius:50%;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#1d4ed8;flex-shrink:0}
+.dealer-info{flex:1;min-width:0}
+.dealer-name{font-size:14px;font-weight:500}
+.dealer-meta{font-size:11px;color:#999;margin-top:2px}
+.dealer-wage{font-size:11px;color:#059669;margin-top:2px;font-weight:500}
+.score-pills{display:flex;flex-direction:column;gap:3px;flex-shrink:0}
+.pill{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;text-align:center}
+.pill-tech{background:#eff6ff;color:#1d4ed8}
+.pill-per{background:#f0fdf4;color:#166534}
+.pill-wage{background:#fefce8;color:#854d0e}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;color:#666;cursor:pointer;margin-bottom:1rem;background:none;border:none;padding:4px 0;-webkit-tap-highlight-color:transparent}
+.tab-row{display:flex;border-bottom:1px solid #e5e5e5;margin-bottom:1rem;overflow-x:auto}
+.tab{padding:8px 14px;font-size:13px;color:#999;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tab.active{color:#1a1a1a;border-bottom-color:#1a1a1a}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.summary-box{background:#f9f9f9;border-radius:8px;padding:10px}
+.summary-label{font-size:11px;color:#999}
+.summary-val{font-size:20px;font-weight:600;color:#1a1a1a;margin-top:2px}
+.summary-stars{color:#f59e0b;font-size:13px;margin-top:2px}
+.bar-row{margin-bottom:8px}
+.bar-label{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:3px}
+.bar-track{height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:#3b82f6;transition:width .3s}
+.bar-fill.green{background:#22c55e}
+.section-label{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 6px;font-weight:600}
+.eval-entry{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.eval-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.role-badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.r-td{background:#fef9c3;color:#854d0e}
+.r-floor{background:#eff6ff;color:#1d4ed8}
+.r-pit{background:#f0fdf4;color:#166534}
+.r-admin{background:#fdf4ff;color:#7e22ce}
+.eval-date{font-size:11px;color:#999}
+.eval-who{font-size:12px;color:#666;margin-bottom:8px}
+.mini-scores{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.mini-score{font-size:11px;padding:2px 7px;border-radius:6px;background:#f5f5f0;color:#666}
+.mini-star{color:#f59e0b}
+.comment-box{font-size:12px;color:#666;background:#f9f9f9;border-radius:6px;padding:7px 9px;margin-top:6px;line-height:1.5}
+.deduct-box{font-size:11px;color:#dc2626;background:#fef2f2;border-radius:6px;padding:5px 8px;margin-top:4px}
+.empty{text-align:center;padding:2rem;color:#999;font-size:13px}
+.loading-msg{text-align:center;padding:2rem;color:#999;font-size:13px}
+.reload-btn{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e5e5;background:#fff;color:#1a1a1a;font-size:13px;cursor:pointer;margin-bottom:1rem;-webkit-tap-highlight-color:transparent}
+.dealer-count{font-size:12px;color:#999;margin-bottom:8px}
+.form-field{margin-bottom:12px}
+.form-label{font-size:12px;color:#666;margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.form-label .badge{font-size:10px;padding:1px 6px;border-radius:20px;background:#fef9c3;color:#854d0e}
+.form-input{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;font-family:inherit}
+.form-input:focus{outline:none;border-color:#3b82f6;background:#fff}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+.toggle-label{font-size:14px;color:#1a1a1a}
+.toggle{width:44px;height:26px;border-radius:13px;background:#e5e5e5;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:#22c55e}
+.toggle::after{content:'';width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on::after{left:21px}
+.save-btn{width:100%;padding:12px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:14px;font-weight:500;cursor:pointer;margin-top:4px;-webkit-tap-highlight-color:transparent}
+.save-btn:active{opacity:.8}
+.save-toast{display:none;margin-top:8px;padding:10px;background:#dcfce7;border:1px solid #86efac;color:#166534;border-radius:8px;font-size:13px;text-align:center}
+.info-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f0f0}
+.info-row:last-child{border-bottom:none}
+.info-label{font-size:12px;color:#999}
+.info-val{font-size:13px;font-weight:500;color:#1a1a1a;text-align:right;max-width:60%}
+.info-val.green{color:#059669}
+.info-val.blue{color:#2563eb}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>ディーラー管理画面</h1>
+  <div class="sub">運営専用</div>
+</div>
+
+<div class="wrap">
+
+<!-- 一覧画面 -->
+<div class="screen active" id="s-list">
+  <button class="reload-btn" onclick="loadData()">🔄 データを最新に更新</button>
+  <div class="search-row">
+    <input class="search-input" id="listSearch" placeholder="名前で検索（ひらがなOK）..." oninput="renderList()">
+    <select class="pref-sel" id="listPref" onchange="renderList()">
+      <option value="">都道府県</option>
+    </select>
+  </div>
+  <div class="sort-row">
+    <button class="sort-btn active" id="sort-tech"  onclick="setSort('tech')">技術↓</button>
+    <button class="sort-btn"        id="sort-per"   onclick="setSort('per')">人柄↓</button>
+    <button class="sort-btn"        id="sort-count" onclick="setSort('count')">件数↓</button>
+    <button class="sort-btn"        id="sort-wage"  onclick="setSort('wage')">時給↓</button>
+    <button class="sort-btn"        id="sort-name"  onclick="setSort('name')">50音</button>
+    <button class="sort-btn"        id="sort-pref"  onclick="setSort('pref')">都道府県</button>
+  </div>
+  <div class="dealer-count" id="dealer-count"></div>
+  <div id="dealerList"><div class="loading-msg">読み込み中...</div></div>
+</div>
+
+<!-- 詳細画面 -->
+<div class="screen" id="s-detail">
+  <button class="back-btn" onclick="goList()">← 一覧に戻る</button>
+  <div class="card" style="text-align:center;padding:1.5rem">
+    <div style="width:60px;height:60px;border-radius:50%;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:#1d4ed8;margin:0 auto 8px" id="detail-avatar"></div>
+    <div style="font-size:17px;font-weight:600" id="detail-name"></div>
+    <div style="font-size:12px;color:#999;margin-top:3px" id="detail-meta"></div>
+  </div>
+  <div class="tab-row">
+    <div class="tab active" id="tab-summary" onclick="switchTab('summary')">サマリー</div>
+    <div class="tab"        id="tab-evals"   onclick="switchTab('evals')">回答一覧</div>
+    <div class="tab"        id="tab-info"    onclick="switchTab('info')">給与・交通</div>
+  </div>
+  <div id="tab-content-summary"></div>
+  <div id="tab-content-evals"   style="display:none"></div>
+  <div id="tab-content-info"    style="display:none"></div>
+</div>
+
+</div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxgjTsiJ47Dk3k5V5PYXehswVhvbZqSuNBhAaVG3iBI0Qq8uTH03YB_uCdM0Fpig2g/exec';
+
+const toKana = s => s.replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0)+0x60));
+const norm = s => toKana((s||'').toLowerCase());
+
+let allEvals = [];
+let allInfo  = {};
+let dealers  = [];
+let currentDealer = null;
+let currentSort = 'tech';
+let sortAsc = false;
+
+const TECH_KEYS = [
+  {key:'シャッフル'},{key:'ピッチング'},{key:'スピード'},{key:'デックの傾き'},
+  {key:'チップサイジング'},{key:'チップカウント'},{key:'計算力'},
+  {key:'ルール理解度'},{key:'ミスの少なさ'},{key:'テンポ'},{key:'フロア報告'},
+];
+const PER_KEYS = [
+  {key:'挨拶・礼儀'},{key:'お客様接客'},{key:'指示への素直さ'},{key:'チーム協力'},
+];
+
+function stars(n){ return n>0?'★'.repeat(Math.round(n))+'☆'.repeat(5-Math.round(n)):'-'; }
+
+function avgOf(evals, key){
+  const vals = evals.map(e=>Number(e[key])||0).filter(v=>v>0);
+  return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+}
+function overallAvg(evals, keys){
+  const vals = keys.map(({key})=>avgOf(evals,key)).filter(v=>v>0);
+  return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+}
+
+async function loadData(){
+  document.getElementById('dealerList').innerHTML='<div class="loading-msg">読み込み中...</div>';
+  try {
+    const res  = await fetch(GAS_URL);
+    const json = await res.json();
+    allEvals = json.data || [];
+
+    // ディーラー情報をIDでマップ化
+    allInfo = {};
+    (json.info||[]).forEach(i=>{ allInfo[i['ディーラーID']] = i; });
+
+    // ディーラー一覧を評価データから抽出
+    const map = {};
+    allEvals.forEach(e=>{
+      const id = e['ディーラーID'];
+      if(!map[id]) map[id]={id,name:e['ディーラー名'],pref:e['都道府県'],evals:[]};
+      map[id].evals.push(e);
+    });
+    dealers = Object.values(map);
+
+    // 都道府県プルダウン
+    const prefs = [...new Set(dealers.map(d=>d.pref))].sort();
+    const sel = document.getElementById('listPref');
+    sel.innerHTML = '<option value="">都道府県</option>';
+    prefs.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;sel.appendChild(o);});
+
+    renderList();
+  } catch(e){
+    document.getElementById('dealerList').innerHTML='<div class="empty">読み込みに失敗しました。再度お試しください。</div>';
+  }
+}
+
+function setSort(key){
+  if(currentSort===key) sortAsc=!sortAsc;
+  else { currentSort=key; sortAsc=false; }
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sort-'+key).classList.add('active');
+  const arrow = sortAsc ? '↑' : '↓';
+  const labels = {tech:'技術',per:'人柄',count:'件数',wage:'時給',name:'50音',pref:'都道府県'};
+  document.getElementById('sort-'+key).textContent = (labels[key]||key) + (key==='name'||key==='pref'?'':arrow);
+  renderList();
+}
+
+function getWage(d){
+  const info = allInfo[d.id];
+  return info ? Number(info['今回時給'])||0 : 0;
+}
+
+function sortDealers(list){
+  return [...list].sort((a,b)=>{
+    let diff = 0;
+    if(currentSort==='tech')  diff = overallAvg(b.evals,TECH_KEYS)-overallAvg(a.evals,TECH_KEYS);
+    else if(currentSort==='per')   diff = overallAvg(b.evals,PER_KEYS)-overallAvg(a.evals,PER_KEYS);
+    else if(currentSort==='count') diff = b.evals.length - a.evals.length;
+    else if(currentSort==='wage')  diff = getWage(b) - getWage(a);
+    else if(currentSort==='name')  diff = a.name.localeCompare(b.name,'ja');
+    else if(currentSort==='pref')  diff = (a.pref||'').localeCompare(b.pref||'','ja') || a.name.localeCompare(b.name,'ja');
+    return sortAsc ? -diff : diff;
+  });
+}
+
+function renderList(){
+  const q    = norm(document.getElementById('listSearch').value);
+  const pref = document.getElementById('listPref').value;
+  let filtered = dealers.filter(d=>(!q||norm(d.name).includes(q))&&(!pref||d.pref===pref));
+  filtered = sortDealers(filtered);
+  document.getElementById('dealer-count').textContent = `${filtered.length}名表示中`;
+  const el = document.getElementById('dealerList');
+  if(!filtered.length){el.innerHTML='<div class="empty">該当するディーラーがいません</div>';return;}
+  el.innerHTML='';
+  filtered.forEach(d=>{
+    const techAvg = overallAvg(d.evals,TECH_KEYS);
+    const perAvg  = overallAvg(d.evals,PER_KEYS);
+    const wage    = getWage(d);
+    const info    = allInfo[d.id];
+    const div = document.createElement('div');
+    div.className='dealer-item';
+    div.onclick=()=>goDetail(d.id);
+    div.innerHTML=`
+      <div class="avatar">${d.name[0]}</div>
+      <div class="dealer-info">
+        <div class="dealer-name">${d.name}</div>
+        <div class="dealer-meta">${d.id}・${d.pref}</div>
+        ${wage?`<div class="dealer-wage">今回 ¥${wage.toLocaleString()}/h</div>`:''}
+        <div style="font-size:11px;color:#999;margin-top:1px">${d.evals.length}件の評価</div>
+      </div>
+      <div class="score-pills">
+        ${techAvg>0?`<span class="pill pill-tech">技 ${techAvg.toFixed(1)}</span>`:''}
+        ${perAvg>0?`<span class="pill pill-per">柄 ${perAvg.toFixed(1)}</span>`:''}
+        ${wage?`<span class="pill pill-wage">¥${wage}</span>`:''}
+      </div>`;
+    el.appendChild(div);
+  });
+}
+
+function goDetail(id){
+  currentDealer = dealers.find(d=>d.id===id);
+  document.getElementById('detail-avatar').textContent = currentDealer.name[0];
+  document.getElementById('detail-name').textContent   = currentDealer.name;
+  document.getElementById('detail-meta').textContent   = `${currentDealer.id}・${currentDealer.pref}・${currentDealer.evals.length}件の評価`;
+  switchTab('summary');
+  showScreen('s-detail');
+}
+
+function switchTab(tab){
+  ['summary','evals','info'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('tab-content-'+t).style.display=t===tab?'block':'none';
+  });
+  if(tab==='summary') renderSummary();
+  else if(tab==='evals') renderEvals();
+  else renderInfo();
+}
+
+function renderSummary(){
+  const evals   = currentDealer.evals;
+  const techAvg = overallAvg(evals,TECH_KEYS);
+  const perAvg  = overallAvg(evals,PER_KEYS);
+  const mess    = evals.reduce((a,e)=>a+(Number(e['減点_私物'])||0),0);
+  const gossip  = evals.reduce((a,e)=>a+(Number(e['減点_悪口'])||0),0);
+  const other   = evals.reduce((a,e)=>a+(Number(e['減点_その他'])||0),0);
+
+  let html=`
+    <div class="summary-grid">
+      <div class="summary-box"><div class="summary-label">技術スコア（平均）</div><div class="summary-val">${techAvg>0?techAvg.toFixed(1):'-'}</div><div class="summary-stars">${techAvg>0?stars(techAvg):''}</div></div>
+      <div class="summary-box"><div class="summary-label">人柄スコア（平均）</div><div class="summary-val">${perAvg>0?perAvg.toFixed(1):'-'}</div><div class="summary-stars">${perAvg>0?stars(perAvg):''}</div></div>
+    </div>
+    <div class="section-label">技術・項目別平均</div>`;
+  TECH_KEYS.forEach(({key})=>{
+    const v=avgOf(evals,key);if(!v)return;
+    html+=`<div class="bar-row"><div class="bar-label"><span>${key}</span><span>${v.toFixed(1)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${v/5*100}%"></div></div></div>`;
+  });
+  html+=`<div class="section-label">人柄・項目別平均</div>`;
+  PER_KEYS.forEach(({key})=>{
+    const v=avgOf(evals,key);if(!v)return;
+    html+=`<div class="bar-row"><div class="bar-label"><span>${key}</span><span>${v.toFixed(1)}</span></div><div class="bar-track"><div class="bar-fill green" style="width:${v/5*100}%"></div></div></div>`;
+  });
+  html+=`<div class="section-label">減点記録（累計）</div>`;
+  if(!mess&&!gossip&&!other) html+=`<div style="font-size:12px;color:#999">減点記録なし</div>`;
+  else {
+    if(mess)   html+=`<div class="deduct-box">私物・弁当未片付け：${mess}回</div>`;
+    if(gossip) html+=`<div class="deduct-box" style="margin-top:4px">控室での不適切発言：${gossip}回</div>`;
+    if(other)  html+=`<div class="deduct-box" style="margin-top:4px">その他問題行動：${other}回</div>`;
+  }
+  document.getElementById('tab-content-summary').innerHTML=html;
+}
+
+function renderEvals(){
+  const evals=currentDealer.evals;
+  const el=document.getElementById('tab-content-evals');
+  if(!evals.length){el.innerHTML='<div class="empty">評価データがありません</div>';return;}
+  const roleClass={td:'r-td',floor:'r-floor',pit:'r-pit',admin:'r-admin'};
+  const roleLabel={td:'TD',floor:'フロア',pit:'ピット',admin:'運営'};
+  el.innerHTML='';
+  [...evals].reverse().forEach(ev=>{
+    const role=ev['評価者ロール']||'';
+    const div=document.createElement('div');div.className='eval-entry';
+    const mini=[...TECH_KEYS,...PER_KEYS]
+      .filter(({key})=>Number(ev[key])>0)
+      .map(({key})=>`<span class="mini-score">${key} <span class="mini-star">${'★'.repeat(Number(ev[key]))}</span></span>`)
+      .join('');
+    const comments=[ev['カードコメント'],ev['チップコメント'],ev['ゲームコメント'],ev['人柄コメント'],ev['総合コメント']].filter(Boolean).join('　');
+    const mess=Number(ev['減点_私物'])||0,gossip=Number(ev['減点_悪口'])||0,other=Number(ev['減点_その他'])||0;
+    div.innerHTML=`
+      <div class="eval-head"><span class="role-badge ${roleClass[role]||''}">${roleLabel[role]||role}</span><span class="eval-date">${ev['日時']||''}</span></div>
+      <div class="eval-who">評価者：${ev['評価者名']||''}</div>
+      <div class="mini-scores">${mini||'<span style="font-size:12px;color:#999">評価項目なし</span>'}</div>
+      ${comments?`<div class="comment-box">${comments}</div>`:''}
+      ${(mess+gossip+other)?`<div class="deduct-box">減点：私物${mess}回 発言${gossip}回 その他${other}回</div>`:''}`;
+    el.appendChild(div);
+  });
+}
+
+function renderInfo(){
+  const d    = currentDealer;
+  const info = allInfo[d.id] || {};
+  const el   = document.getElementById('tab-content-info');
+  el.innerHTML=`
+    <div class="card">
+      <div class="card-title">💴 給与情報</div>
+      <div class="form-field">
+        <div class="form-label">今回時給（円）</div>
+        <input class="form-input" id="wage_now" type="number" placeholder="例：1200" value="${info['今回時給']||''}">
+      </div>
+      <div class="form-field">
+        <div class="form-label">次回時給（円）</div>
+        <input class="form-input" id="wage_next" type="number" placeholder="例：1300" value="${info['次回時給']||''}">
+      </div>
+      <div class="form-field">
+        <div class="form-label">交通費（円）<span class="badge">1000円超の場合のみ</span></div>
+        <input class="form-input" id="transport" type="number" placeholder="例：1500" value="${info['交通費']||''}">
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-label">遠方補助あり</div>
+        <div class="toggle ${info['遠方補助']==='あり'?'on':''}" id="travel-toggle" onclick="toggleAid()"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🚃 交通情報</div>
+      <div class="form-field">
+        <div class="form-label">最寄り駅</div>
+        <input class="form-input" id="nearest_station" type="text" placeholder="例：大阪梅田駅" value="${info['最寄り駅']||''}">
+      </div>
+      <div class="form-field">
+        <div class="form-label">終電情報</div>
+        <input class="form-input" id="last_train" type="text" placeholder="例：23:45 大阪梅田発" value="${info['終電情報']||''}">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📝 備考</div>
+      <div class="form-field">
+        <textarea class="form-input" id="info_note" rows="3" placeholder="その他メモ">${info['備考']||''}</textarea>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveInfo()">保存する</button>
+    <div class="save-toast" id="save-toast">✅ 保存しました</div>`;
+}
+
+function toggleAid(){
+  const t = document.getElementById('travel-toggle');
+  t.classList.toggle('on');
+}
+
+async function saveInfo(){
+  const d = currentDealer;
+  const travelAid = document.getElementById('travel-toggle').classList.contains('on') ? 'あり' : 'なし';
+  const payload = {
+    type: 'dealer_info',
+    dealer_id: d.id,
+    wage_now:  document.getElementById('wage_now').value,
+    wage_next: document.getElementById('wage_next').value,
+    transport: document.getElementById('transport').value,
+    travel_aid: travelAid,
+    nearest_station: document.getElementById('nearest_station').value,
+    last_train: document.getElementById('last_train').value,
+    note: document.getElementById('info_note').value,
+  };
+  try {
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    // ローカルのallInfoも更新
+    allInfo[d.id] = {
+      'ディーラーID':d.id,'今回時給':payload.wage_now,'次回時給':payload.wage_next,
+      '交通費':payload.transport,'遠方補助':travelAid,
+      '最寄り駅':payload.nearest_station,'終電情報':payload.last_train,'備考':payload.note
+    };
+    const toast = document.getElementById('save-toast');
+    toast.style.display='block';
+    setTimeout(()=>toast.style.display='none',2500);
+  } catch(e){
+    alert('保存に失敗しました');
+  }
+}
+
+function goList(){ showScreen('s-list'); renderList(); }
+function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id)); }
+
+loadData();
+</script>
+</body>
+</html>
