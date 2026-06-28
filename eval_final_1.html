@@ -31,7 +31,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .select-field{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;-webkit-appearance:none}
 .search-input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;font-family:inherit;margin-bottom:8px}
 .pref-select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:13px;-webkit-appearance:none;margin-bottom:8px}
-.radio-list{max-height:220px;overflow-y:auto;border:1px solid #e5e5e5;border-radius:8px;background:#fff}
+.radio-list{max-height:220px;min-height:48px;overflow-y:auto;border:1px solid #e5e5e5;border-radius:8px;background:#fff}
 .radio-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .radio-item:last-child{border-bottom:none}
 .radio-item:active{background:#f5f5f0}
@@ -42,8 +42,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .radio-label{font-size:14px;color:#1a1a1a;flex:1}
 .radio-sub{font-size:11px;color:#999;margin-left:6px}
 .radio-empty{padding:12px 14px;font-size:13px;color:#999}
-.selected-tag{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:9px 12px;background:#eff6ff;border-radius:8px;font-size:13px;color:#1d4ed8}
-.selected-tag .clear{cursor:pointer;font-size:18px;color:#3b82f6;line-height:1}
+.selected-tag{display:none;align-items:center;justify-content:space-between;margin-top:8px;padding:9px 12px;background:#eff6ff;border-radius:8px;font-size:13px;color:#1d4ed8}
+.selected-tag.show{display:flex!important}.selected-tag .clear{cursor:pointer;font-size:18px;color:#3b82f6;line-height:1}
 .deduct-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0}
 .deduct-row:last-child{border-bottom:none}
 .deduct-label{font-size:13px;color:#1a1a1a;flex:1}
@@ -82,7 +82,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
     <div class="card-title">👤 評価者</div>
     <input class="search-input" id="evalSearch" placeholder="名前で検索..." oninput="filterEval()">
     <div class="radio-list" id="evalRadioList"></div>
-    <div class="selected-tag" id="evalSelectedTag" style="display:none">
+    <div class="selected-tag" id="evalSelectedTag" style="display:none!important">
       <span id="evalSelectedLabel"></span>
       <span class="clear" onclick="clearEval()">×</span>
     </div>
@@ -101,7 +101,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
       <option value="">都道府県で絞り込み</option>
     </select>
     <div class="radio-list" id="dealerRadioList"></div>
-    <div class="selected-tag" id="dealerSelectedTag" style="display:none">
+    <div class="selected-tag" id="dealerSelectedTag" style="display:none!important">
       <span id="dealerSelectedLabel"></span>
       <span class="clear" onclick="clearDealer()">×</span>
     </div>
@@ -376,7 +376,7 @@ function selectRadio(type, x){
   // 選択タグ表示
   const label = type==='eval'?`✓ ${x.name}（${x.role}）`:`✓ ${x.name}（${x.pref}）`;
   document.getElementById(type+'SelectedLabel').textContent = label;
-  document.getElementById(type+'SelectedTag').style.display = 'flex';
+  document.getElementById(type+'SelectedTag').classList.add('show');
   // ロール自動セット
   if(type==='eval'&&x.role){
     const m={'TD':'td','フロア':'floor','ピット':'pit','運営':'admin'};
@@ -386,7 +386,7 @@ function selectRadio(type, x){
 
 function clearEval(){
   selected.eval=null;
-  document.getElementById('evalSelectedTag').style.display='none';
+  document.getElementById('evalSelectedTag').classList.remove('show');
   document.getElementById('evalSearch').value='';
   document.getElementById('evalRole').value='';
   filterEval();
@@ -394,7 +394,7 @@ function clearEval(){
 
 function clearDealer(){
   selected.dealer=null;
-  document.getElementById('dealerSelectedTag').style.display='none';
+  document.getElementById('dealerSelectedTag').classList.remove('show');
   document.getElementById('dealerSearch').value='';
   document.getElementById('prefFilter').value='';
   filterDealer();
@@ -530,10 +530,17 @@ function resetForm(){
 }
 
 // 初期化
-initPrefSelect();
-filterEval();
-filterDealer();
-rebuildAll();
+function init(){
+  initPrefSelect();
+  filterEval();
+  filterDealer();
+  rebuildAll();
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 </body>
 </html>
