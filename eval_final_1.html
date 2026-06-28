@@ -90,6 +90,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
       <option value="td">TD</option>
       <option value="floor">フロア</option>
       <option value="pit">ピット</option>
+      <option value="admin">運営</option>
     </select>
   </div>
   <div class="card">
@@ -454,7 +455,7 @@ function selectItem(type, x){
   tag.innerHTML = `<span class="selected-tag">${label}<span class="clear-x" onclick="clearItem('${type}')">×</span></span>`;
   document.getElementById(type==='eval'?'evalSearch':'dealerSearch').value = '';
   document.getElementById(type+'Drop').classList.remove('open');
-  if(type==='eval'&&x.role){const m={'TD':'td','フロア':'floor','ピット':'pit'};document.getElementById('evalRole').value=m[x.role]||'';}
+  if(type==='eval'&&x.role){const m={'TD':'td','フロア':'floor','ピット':'pit','運営':'admin'};document.getElementById('evalRole').value=m[x.role]||'';}
 }
 
 function clearItem(type){
