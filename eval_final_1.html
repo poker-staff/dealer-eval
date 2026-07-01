@@ -126,9 +126,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
       <option value="">都道府県で絞り込み</option>
     </select>
     <div class="radio-list" id="dealerRadioList"></div>
-    <div class="selected-tag" id="dealerSelectedTag">
+   <div class="selected-tag" id="dealerSelectedTag">
       <span id="dealerSelectedLabel"></span>
       <span class="clear" onclick="clearDealer()">×</span>
+    </div>
+    <div id="unknownFields" style="display:none;margin-top:10px;padding:10px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca">
+      <div style="font-size:12px;color:#dc2626;margin-bottom:8px;font-weight:500">⚠️ 特徴を記録してください</div>
+      <input class="search-input" id="unknown_height" placeholder="身長（例：160cm前後）" style="margin-bottom:6px">
+      <input class="search-input" id="unknown_voice" placeholder="声の特徴（例：低め・ハスキー）" style="margin-bottom:6px">
+      <input class="search-input" id="unknown_clothes" placeholder="服装（例：黒いTシャツ）" style="margin-bottom:6px">
+      <input class="search-input" id="unknown_name" placeholder="わかれば名前">
     </div>
   </div>
   <div class="nav">
@@ -232,12 +239,18 @@ function pinSubmit(){
 function initPrefSelect(){const s=document.getElementById('prefFilter');[...new Set(DEALERS.map(d=>d.pref))].sort().forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});}
 function renderRadioList(list){
   const el=document.getElementById('dealerRadioList');
-  if(!list.length){el.innerHTML='<div class="radio-empty">見つかりません</div>';return;}
   el.innerHTML='';
-  list.forEach(x=>{
+  // 名前不明の選択肢を常に一番下に表示
+  const unknown={id:'UNKNOWN',name:'名前不明',kana:'なまえふめい',pref:''};
+  const allList=[...list, unknown];
+  if(!list.length){
+    // 検索結果なしでも名前不明は表示
+  }
+  allList.forEach(x=>{
     const isChecked=selected.dealer&&selected.dealer.id===x.id;
     const div=document.createElement('div');div.className='radio-item';
-    div.innerHTML='<div class="radio-circle '+(isChecked?'checked':'')+'" id="rc-'+x.id+'"><div class="radio-dot"></div></div><div class="radio-label">'+x.name+'<span class="radio-sub">'+x.pref+'</span></div>';
+    const isUnknown=x.id==='UNKNOWN';
+    div.innerHTML='<div class="radio-circle '+(isChecked?'checked':'')+'" id="rc-'+x.id+'"><div class="radio-dot"></div></div><div class="radio-label '+(isUnknown?'style="color:#ef4444"':'')+'">'+(isUnknown?'⚠️ ':'')+x.name+(x.pref?'<span class="radio-sub">'+x.pref+'</span>':'')+'</div>';
     div.onclick=()=>selectDealer(x);
     el.appendChild(div);
   });
@@ -246,8 +259,12 @@ function selectDealer(x){
   selected.dealer=x;
   document.querySelectorAll('[id^="rc-"]').forEach(el=>el.classList.remove('checked'));
   const t=document.getElementById('rc-'+x.id);if(t)t.classList.add('checked');
-  document.getElementById('dealerSelectedLabel').textContent='✓ '+x.name+'（'+x.pref+'）';
+  const label=x.id==='UNKNOWN'?'⚠️ 名前不明':'✓ '+x.name+(x.pref?'（'+x.pref+'）':'');
+  document.getElementById('dealerSelectedLabel').textContent=label;
   document.getElementById('dealerSelectedTag').classList.add('show');
+  // 名前不明の場合は特徴入力欄を表示
+  const unknownFields=document.getElementById('unknownFields');
+  if(unknownFields) unknownFields.style.display=x.id==='UNKNOWN'?'block':'none';
 }
 function clearDealer(){selected.dealer=null;document.getElementById('dealerSelectedTag').classList.remove('show');document.getElementById('dealerSearch').value='';document.getElementById('prefFilter').value='';filterDealer();}
 function filterDealer(){
@@ -286,7 +303,16 @@ async function submitForm(){
   const ds=now.getFullYear()+'/'+(now.getMonth()+1).toString().padStart(2,'0')+'/'+now.getDate().toString().padStart(2,'0')+' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
   const comments={};document.querySelectorAll('textarea[data-comment]').forEach(t=>{comments[t.dataset.comment]=t.value.trim();});
   const scoreData={};[...AXES.card,...AXES.chip,...AXES.game,...AXES.personality].forEach(({key})=>scoreData[key]=ratings[key]||0);
-  const payload={datetime:ds,evaluator_id:selected.eval.id,evaluator_name:selected.eval.name,evaluator_role:document.getElementById('evalRole').value,dealer_id:selected.dealer.id,dealer_name:selected.dealer.name,dealer_pref:selected.dealer.pref,...scoreData,comment_card:comments.card||'',comment_chip:comments.chip||'',comment_game:comments.game||'',comment_personality:comments.personality||'',comment_deduct:comments.deduct||'',comment_overall:comments.overall||'',deduct_mess:deducts.mess,deduct_gossip:deducts.gossip,deduct_other:deducts.other};
+  const unknownNote = selected.dealer.id==='UNKNOWN' ? [
+    document.getElementById('unknown_height').value,
+    document.getElementById('unknown_voice').value,
+    document.getElementById('unknown_clothes').value,
+    document.getElementById('unknown_name').value
+  ].filter(Boolean).join('／') : '';
+  const dealerName = selected.dealer.id==='UNKNOWN'
+    ? '名前不明'+(unknownNote?'（'+unknownNote+'）':'')
+    : selected.dealer.name;
+  const payload={datetime:ds,evaluator_id:selected.eval.id,evaluator_name:selected.eval.name,evaluator_role:document.getElementById('evalRole').value,dealer_id:selected.dealer.id,dealer_name:dealerName,dealer_pref:selected.dealer.pref,,...scoreData,comment_card:comments.card||'',comment_chip:comments.chip||'',comment_game:comments.game||'',comment_personality:comments.personality||'',comment_deduct:comments.deduct||'',comment_overall:comments.overall||'',deduct_mess:deducts.mess,deduct_gossip:deducts.gossip,deduct_other:deducts.other};
   document.getElementById('loading').style.display='block';document.getElementById('error-msg').style.display='none';
   try{
     await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
