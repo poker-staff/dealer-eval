@@ -250,7 +250,12 @@ function selectDealer(x){
   document.getElementById('dealerSelectedTag').classList.add('show');
 }
 function clearDealer(){selected.dealer=null;document.getElementById('dealerSelectedTag').classList.remove('show');document.getElementById('dealerSearch').value='';document.getElementById('prefFilter').value='';filterDealer();}
-function filterDealer(){const q=norm(document.getElementById('dealerSearch').value);const pref=document.getElementById('prefFilter').value;renderRadioList(DEALERS.filter(x=>(!q||norm(x.name).includes(q)||norm(x.kana).includes(q))&&(!pref||x.pref===pref)));}
+function filterDealer(){
+  const q=norm(document.getElementById('dealerSearch').value);
+  const pref=document.getElementById('prefFilter').value;
+  const filtered=DEALERS.filter(x=>(!q||norm(x.name).includes(q)||norm(x.kana).includes(q))&&(!pref||x.pref===pref));
+  renderRadioList(filtered);
+}
 function buildRows(containerId,axisKey){
   const el=document.getElementById(containerId);el.innerHTML='';
   AXES[axisKey].forEach(({key,label,guide})=>{
