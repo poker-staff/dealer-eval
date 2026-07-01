@@ -43,7 +43,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .radio-sub{font-size:11px;color:#999;margin-left:6px}
 .radio-empty{padding:12px 14px;font-size:13px;color:#999}
 .selected-tag{display:none;align-items:center;justify-content:space-between;margin-top:8px;padding:9px 12px;background:#eff6ff;border-radius:8px;font-size:13px;color:#1d4ed8}
-.selected-tag.show{display:flex!important}.selected-tag .clear{cursor:pointer;font-size:18px;color:#3b82f6;line-height:1}
+.selected-tag.show{display:flex}
+.selected-tag .clear{cursor:pointer;font-size:18px;color:#3b82f6;line-height:1}
 .deduct-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0}
 .deduct-row:last-child{border-bottom:none}
 .deduct-label{font-size:13px;color:#1a1a1a;flex:1}
@@ -63,28 +64,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 </style>
 </head>
 <body>
-
 <div class="header">
   <h1>ディーラー評価フォーム</h1>
-  <div class="sub" id="screenSub">ステップ 1 / 3</div>
+  <div class="sub" id="screenSub">PIN認証</div>
   <div class="steps">
     <div class="step-dot active" id="dot0"></div>
     <div class="step-dot" id="dot1"></div>
     <div class="step-dot" id="dot2"></div>
   </div>
 </div>
-
 <div style="max-width:480px;margin:0 auto;padding:0 1rem">
-
-<!-- ステップ1 -->
-<div class="screen active" id="screen0">
+<div class="screen active" id="screen-pin">
+  <div style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem">
+    <div style="font-size:40px;margin-bottom:1rem">🔐</div>
+    <div style="font-size:18px;font-weight:600;margin-bottom:6px">ディーラー評価フォーム</div>
+    <div style="font-size:13px;color:#999;margin-bottom:2rem">PINを入力してください</div>
+    <div style="width:100%;max-width:280px">
+      <input type="password" inputmode="numeric" maxlength="4" id="pinInput"
+        style="width:100%;padding:14px;font-size:24px;text-align:center;border-radius:12px;border:2px solid #e5e5e5;background:#f9f9f9;letter-spacing:8px;font-family:inherit"
+        placeholder="••••" oninput="checkPin()">
+      <div id="pinError" style="display:none;margin-top:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;font-size:13px;color:#dc2626;text-align:center">PINが正しくありません</div>
+      <div id="pinSuccess" style="display:none;margin-top:10px;padding:8px 12px;background:#dcfce7;border-radius:8px;font-size:13px;color:#166534;text-align:center"></div>
+    </div>
+  </div>
+</div>
+<div class="screen" id="screen0">
   <div class="card">
     <div class="card-title">👤 評価者</div>
-    <input class="search-input" id="evalSearch" placeholder="名前で検索..." oninput="filterEval()">
-    <div class="radio-list" id="evalRadioList"></div>
-    <div class="selected-tag" id="evalSelectedTag" style="display:none!important">
+    <div class="selected-tag show" id="evalSelectedTag">
       <span id="evalSelectedLabel"></span>
-      <span class="clear" onclick="clearEval()">×</span>
     </div>
     <select class="select-field" id="evalRole" style="margin-top:10px">
       <option value="">ロールを選択</option>
@@ -101,7 +109,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
       <option value="">都道府県で絞り込み</option>
     </select>
     <div class="radio-list" id="dealerRadioList"></div>
-    <div class="selected-tag" id="dealerSelectedTag" style="display:none!important">
+    <div class="selected-tag" id="dealerSelectedTag">
       <span id="dealerSelectedLabel"></span>
       <span class="clear" onclick="clearDealer()">×</span>
     </div>
@@ -110,8 +118,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
     <button class="btn primary" onclick="goTo(1)">次へ →</button>
   </div>
 </div>
-
-<!-- ステップ2 -->
 <div class="screen" id="screen1">
   <p class="hint">気になった項目だけ選択してOK。未選択のまま送信できます。</p>
   <div class="card">
@@ -134,8 +140,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
     <button class="btn primary" onclick="goTo(2)">次へ →</button>
   </div>
 </div>
-
-<!-- ステップ3 -->
 <div class="screen" id="screen2">
   <p class="hint">気になった項目だけ選択してOK。未選択のまま送信できます。</p>
   <div class="card">
@@ -183,215 +187,56 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
   <div class="toast" id="toast">✅ 評価を登録しました</div>
   <div class="error-msg" id="error-msg">送信に失敗しました。もう一度お試しください。</div>
 </div>
-
 </div>
-
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxgjTsiJ47Dk3k5V5PYXehswVhvbZqSuNBhAaVG3iBI0Qq8uTH03YB_uCdM0Fpig2g/exec';
-
-const EVALUATORS = [
-  {id:"E01", name:"いつか",      kana:"いつか",      role:"TD"},
-  {id:"E02", name:"ぷりにょろた", kana:"ぷりにょろた", role:"TD"},
-  {id:"E03", name:"たくみ",      kana:"たくみ",      role:"TD"},
-  {id:"E04", name:"たいが",      kana:"たいが",      role:"TD"},
-  {id:"E05", name:"saki",        kana:"さき",        role:"ピット"},
-  {id:"E06", name:"すな",        kana:"すな",        role:"ピット"},
-  {id:"E07", name:"福井",        kana:"ふくい",      role:"運営"},
-  {id:"E08", name:"こーき",      kana:"こーき",      role:"運営"},
-];
-
-const DEALERS = [
-  {id:"D001", name:"いつか",      kana:"いつか",      pref:"大阪府"},
-  {id:"D002", name:"ぷりにょろた", kana:"ぷりにょろた", pref:"北海道"},
-  {id:"D003", name:"たくみ",      kana:"たくみ",      pref:"東京都"},
-  {id:"D004", name:"たいが",      kana:"たいが",      pref:"東京都"},
-  {id:"D005", name:"紅音",        kana:"くおん",      pref:"東京都"},
-  {id:"D006", name:"ごじら",      kana:"ごじら",      pref:"東京都"},
-  {id:"D007", name:"あい",        kana:"あい",        pref:"東京都"},
-  {id:"D008", name:"よしくん",    kana:"よしくん",    pref:"東京都"},
-  {id:"D009", name:"ふるぽん",    kana:"ふるぽん",    pref:"東京都"},
-  {id:"D010", name:"もも",        kana:"もも",        pref:"福岡県"},
-  {id:"D011", name:"あやね",      kana:"あやね",      pref:"福岡県"},
-  {id:"D012", name:"龍",          kana:"りゅう",      pref:"大阪府"},
-  {id:"D013", name:"mai(大阪)",   kana:"まい",        pref:"大阪府"},
-  {id:"D014", name:"りう",        kana:"りう",        pref:"大阪府"},
-  {id:"D015", name:"ゆあさ",      kana:"ゆあさ",      pref:"大阪府"},
-  {id:"D016", name:"kyon",        kana:"きょん",      pref:"大阪府"},
-  {id:"D017", name:"ゆうと",      kana:"ゆうと",      pref:"大阪府"},
-  {id:"D018", name:"たま",        kana:"たま",        pref:"大阪府"},
-  {id:"D019", name:"なつき",      kana:"なつき",      pref:"兵庫県"},
-  {id:"D020", name:"ピース",      kana:"ぴーす",      pref:"佐賀県"},
-  {id:"D021", name:"はるな(福岡)", kana:"はるな",     pref:"福岡県"},
-  {id:"D022", name:"まふちゃん",  kana:"まふちゃん",  pref:"愛知県"},
-  {id:"D023", name:"ふみ",        kana:"ふみ",        pref:"愛知県"},
-  {id:"D024", name:"こたろう",    kana:"こたろう",    pref:"愛知県"},
-  {id:"D025", name:"まい(愛知)",  kana:"まい",        pref:"愛知県"},
-  {id:"D026", name:"かーふ",      kana:"かーふ",      pref:"愛知県"},
-  {id:"D027", name:"ぷむむ",      kana:"ぷむむ",      pref:"京都府"},
-  {id:"D028", name:"りり",        kana:"りり",        pref:"大阪府"},
-  {id:"D029", name:"まーらいおん", kana:"まーらいおん", pref:"大阪府"},
-  {id:"D030", name:"うみ",        kana:"うみ",        pref:"大阪府"},
-  {id:"D031", name:"こし",        kana:"こし",        pref:"大阪府"},
-  {id:"D032", name:"kk",          kana:"けーけー",    pref:"大阪府"},
-  {id:"D033", name:"JURIA",       kana:"じゅりあ",    pref:"大阪府"},
-  {id:"D034", name:"蓮見生活感",  kana:"はすみせいかつかん", pref:"大阪府"},
-  {id:"D035", name:"かのん",      kana:"かのん",      pref:"大阪府"},
-  {id:"D036", name:"sua",         kana:"すあ",        pref:"大阪府"},
-  {id:"D037", name:"ao",          kana:"あお",        pref:"大阪府"},
-  {id:"D038", name:"たかまる",    kana:"たかまる",    pref:"大阪府"},
-  {id:"D039", name:"kyu.",        kana:"きゅう",      pref:"大阪府"},
-  {id:"D040", name:"れん",        kana:"れん",        pref:"大阪府"},
-  {id:"D041", name:"ぬん",        kana:"ぬん",        pref:"大阪府"},
-  {id:"D042", name:"KIMUTI",      kana:"きむち",      pref:"大阪府"},
-  {id:"D043", name:"アキヤマ",    kana:"あきやま",    pref:"大阪府"},
-  {id:"D044", name:"キョウ",      kana:"きょう",      pref:"大阪府"},
-  {id:"D045", name:"うりゅう",    kana:"うりゅう",    pref:"大阪府"},
-  {id:"D046", name:"高橋",        kana:"たかはし",    pref:"大阪府"},
-  {id:"D047", name:"sakkii",      kana:"さっきー",    pref:"兵庫県"},
-  {id:"D048", name:"ゆう",        kana:"ゆう",        pref:"兵庫県"},
-  {id:"D049", name:"かんちゃん",  kana:"かんちゃん",  pref:"奈良県"},
-  {id:"D050", name:"BE",          kana:"べー",        pref:"大阪府"},
-  {id:"D051", name:"たくみ(兵庫)", kana:"たくみ",     pref:"兵庫県"},
-  {id:"D052", name:"yuto@KINGS",  kana:"ゆうと",      pref:"奈良県"},
-  {id:"D053", name:"いこいこ",    kana:"いこいこ",    pref:"兵庫県"},
-  {id:"D054", name:"レイ",        kana:"れい",        pref:"滋賀県"},
-  {id:"D055", name:"バッキー",    kana:"ばっきー",    pref:"大阪府"},
-  {id:"D056", name:"リン",        kana:"りん",        pref:"大阪府"},
-  {id:"D057", name:"ぼち",        kana:"ぼち",        pref:"大阪府"},
-  {id:"D058", name:"つよし",      kana:"つよし",      pref:"大阪府"},
-  {id:"D059", name:"しゅんと",    kana:"しゅんと",    pref:"大阪府"},
-  {id:"D060", name:"mii",         kana:"みー",        pref:"大阪府"},
-  {id:"D061", name:"4iu",         kana:"よいう",      pref:"大阪府"},
-  {id:"D062", name:"紫月",        kana:"しづき",      pref:"大阪府"},
-  {id:"D063", name:"かず",        kana:"かず",        pref:"大阪府"},
-  {id:"D064", name:"ゆづき",      kana:"ゆづき",      pref:"大阪府"},
-  {id:"D065", name:"ぴこ",        kana:"ぴこ",        pref:"兵庫県"},
-  {id:"D066", name:"あおい",      kana:"あおい",      pref:"奈良県"},
-  {id:"D067", name:"mikuri",      kana:"みくり",      pref:"京都府"},
-  {id:"D068", name:"Hiro",        kana:"ひろ",        pref:"東京都"},
-  {id:"D069", name:"yuni",        kana:"ゆに",        pref:"福岡県"},
-  {id:"D070", name:"みつき",      kana:"みつき",      pref:"福岡県"},
-  {id:"D071", name:"もか",        kana:"もか",        pref:"愛知県"},
-  {id:"D072", name:"KENT",        kana:"けんと",      pref:"愛知県"},
-  {id:"D073", name:"日和",        kana:"ひより",      pref:"京都府"},
-  {id:"D074", name:"ゆめ",        kana:"ゆめ",        pref:"大阪府"},
-  {id:"D075", name:"かじゅ",      kana:"かじゅ",      pref:"大阪府"},
-  {id:"D076", name:"みう",        kana:"みう",        pref:"大阪府"},
-  {id:"D077", name:"なみ",        kana:"なみ",        pref:"大阪府"},
-  {id:"D078", name:"れんか",      kana:"れんか",      pref:"大阪府"},
-  {id:"D079", name:"はるな(大阪)", kana:"はるな",     pref:"大阪府"},
-  {id:"D080", name:"もと",        kana:"もと",        pref:"愛知県"},
-  {id:"D081", name:"たまねぎ",    kana:"たまねぎ",    pref:"大阪府"},
-  {id:"D082", name:"そうた",      kana:"そうた",      pref:"大阪府"},
-  {id:"D083", name:"カイト",      kana:"かいと",      pref:"滋賀県"},
-  {id:"D084", name:"asuka",       kana:"あすか",      pref:"大阪府"},
-  {id:"D085", name:"373",         kana:"みなみ",      pref:"大阪府"},
-  {id:"D086", name:"ももせ",      kana:"ももせ",      pref:"大阪府"},
-  {id:"D087", name:"コウノ",      kana:"こうの",      pref:"大阪府"},
-  {id:"D088", name:"saki",        kana:"さき",        pref:"大阪府"},
-  {id:"D089", name:"すな",        kana:"すな",        pref:"大阪府"},
-  {id:"D090", name:"7",           kana:"なな",        pref:"大阪府"},
-  {id:"D091", name:"せーが",      kana:"せーが",      pref:"大阪府"},
-  {id:"D092", name:"わかは",      kana:"わかは",      pref:"大阪府"},
-  {id:"D093", name:"つかさ",      kana:"つかさ",      pref:"大阪府"},
-  {id:"D094", name:"奏",          kana:"かなで",      pref:"大阪府"},
-  {id:"D095", name:"あゆたん",    kana:"あゆたん",    pref:"大阪府"},
-  {id:"D096", name:"ヘジョ",      kana:"へじょ",      pref:"大阪府"},
-  {id:"D097", name:"37",          kana:"みな",        pref:"大阪府"},
-  {id:"D098", name:"ふるちゃん",  kana:"ふるちゃん",  pref:"大阪府"},
-  {id:"D099", name:"いっしー",    kana:"いっしー",    pref:"大阪府"},
-  {id:"D100", name:"にこ",        kana:"にこ",        pref:"大阪府"},
-  {id:"D101", name:"えいな",      kana:"えいな",      pref:"大阪府"},
-  {id:"D102", name:"おしょこ",    kana:"おしょこ",    pref:"兵庫県"},
-  {id:"D103", name:"龍角散",      kana:"りゅうかくさん", pref:"大阪府"},
-  {id:"D104", name:"マツモト",    kana:"まつもと",    pref:"大阪府"},
-];
-
-const AXES = {
-  card:[
-    {key:'shuffle',   label:'シャッフルの正確さ', guide:['毎回ミスがある','時々ミスや雑さが目立つ','平均的にこなせる','安定して正確・スムーズ','完璧・お手本レベル']},
-    {key:'pitching',  label:'ピッチングの正確さ', guide:['毎回コントロールが乱れる','時々ずれや強さにムラがある','平均的に届けられる','安定して正確に届けられる','狙い通り・お手本レベル']},
-    {key:'cardspeed', label:'スピード',           guide:['著しく遅く進行を妨げる','やや遅くテンポが乱れる','平均的な速さ','テンポよくスムーズ','非常に速く正確']},
-    {key:'decktilt',  label:'デックの傾き',       guide:['常に傾いており見えてしまう','時々傾きが目立つ','多少傾くが支障なし','ほぼ水平を保てる','常に完璧な角度を維持']},
-  ],
-  chip:[
-    {key:'sizing', label:'チップサイジング', guide:['サイジングできていない','時々サイジングしていない','平均的にサイジングできる','安定してきれいにサイジング','常に完璧・見栄えも美しい']},
-    {key:'count',  label:'チップカウント',   guide:['毎回数え間違いがある','時々ミスがある','平均的に正確','ほぼミスなく素早い','完璧・即座に正確']},
-  ],
-  game:[
-    {key:'calc',    label:'計算力',             guide:['毎回計算ミスがある','時々計算が遅い・間違える','平均的に計算できる','素早く正確に計算できる','瞬時に正確・どんな状況も対応']},
-    {key:'rules',   label:'ルール理解度',       guide:['基本ルールが不安定','時々ルールに迷う','基本ルールは問題なし','応用ルールも対応できる','全ゲーム・全状況に完全対応']},
-    {key:'mistake', label:'ミスの少なさ',       guide:['毎回何らかのミスがある','時々ミスが目立つ','平均的なミス頻度','ほぼミスなく進行できる','ミスがほぼゼロ・自己修正も迅速']},
-    {key:'tempo',   label:'テンポコントロール', guide:['進行が遅くゲームが止まる','時々テンポが乱れる','平均的なテンポ','スムーズなテンポを維持','最高のテンポ・場を支配できる']},
-    {key:'report',  label:'フロアへの状況報告', guide:['報告できない・状況把握不可','報告が遅い・情報が不正確','最低限の報告はできる','素早く正確に報告できる','的確・簡潔・即座に状況共有']},
-  ],
-  personality:[
-    {key:'greeting',  label:'挨拶・礼儀',       guide:['挨拶がない・態度が悪い','挨拶が不十分・受け身','普通に挨拶できる','自発的に明るく挨拶できる','誰に対しても常に完璧な礼儀']},
-    {key:'service',   label:'お客様との接客',   guide:['お客様対応に問題がある','接客がやや消極的','普通に対応できる','自然な会話・お客様が喜ぶ','場を盛り上げ指名・リピートされる']},
-    {key:'obedience', label:'指示への素直さ',   guide:['指示を無視・反発する','時々素直に従えない','指示通りに動ける','素直に即動ける・確認も丁寧','先読みして動ける・指示不要なレベル']},
-    {key:'teamwork',  label:'チームへの協力度', guide:['協力しない・自分本位','言われたことだけやる','普通に協力できる','積極的に周りをサポート','率先してチームを引っ張る']},
-  ],
-};
-
-const ratings = {};
-const deducts = {mess:0, gossip:0, other:0};
-const selected = {eval:null, dealer:null};
-
-const toKana = s => s.replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0)+0x60));
-const norm = s => toKana((s||'').toLowerCase());
-
-// 都道府県プルダウン初期化
-function initPrefSelect(){
-  const s = document.getElementById('prefFilter');
-  const prefs = [...new Set(DEALERS.map(d=>d.pref))].sort();
-  prefs.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});
+const GAS_URL='https://script.google.com/macros/s/AKfycbxgjTsiJ47Dk3k5V5PYXehswVhvbZqSuNBhAaVG3iBI0Qq8uTH03YB_uCdM0Fpig2g/exec';
+const PIN_MAP={"2824":{id:"E01",name:"いつか",role:"TD"},"1173":{id:"E02",name:"ぷりにょろた",role:"TD"},"5506":{id:"E03",name:"たくみ",role:"TD"},"1837":{id:"E04",name:"たいが",role:"TD"},"3825":{id:"E05",name:"saki",role:"ピット"},"5321":{id:"E06",name:"すな",role:"ピット"},"2913":{id:"E07",name:"福井",role:"運営"},"8367":{id:"E08",name:"こーき",role:"運営"}};
+const DEALERS=[{id:"D001",name:"いつか",kana:"いつか",pref:"大阪府"},{id:"D002",name:"ぷりにょろた",kana:"ぷりにょろた",pref:"北海道"},{id:"D003",name:"たくみ",kana:"たくみ",pref:"東京都"},{id:"D004",name:"たいが",kana:"たいが",pref:"東京都"},{id:"D005",name:"紅音",kana:"くおん",pref:"東京都"},{id:"D006",name:"ごじら",kana:"ごじら",pref:"東京都"},{id:"D007",name:"あい",kana:"あい",pref:"東京都"},{id:"D008",name:"よしくん",kana:"よしくん",pref:"東京都"},{id:"D009",name:"ふるぽん",kana:"ふるぽん",pref:"東京都"},{id:"D010",name:"もも",kana:"もも",pref:"福岡県"},{id:"D011",name:"あやね",kana:"あやね",pref:"福岡県"},{id:"D012",name:"龍",kana:"りゅう",pref:"大阪府"},{id:"D013",name:"mai(大阪)",kana:"まい",pref:"大阪府"},{id:"D014",name:"りう",kana:"りう",pref:"大阪府"},{id:"D015",name:"ゆあさ",kana:"ゆあさ",pref:"大阪府"},{id:"D016",name:"kyon",kana:"きょん",pref:"大阪府"},{id:"D017",name:"ゆうと",kana:"ゆうと",pref:"大阪府"},{id:"D018",name:"たま",kana:"たま",pref:"大阪府"},{id:"D019",name:"なつき",kana:"なつき",pref:"兵庫県"},{id:"D020",name:"ピース",kana:"ぴーす",pref:"佐賀県"},{id:"D021",name:"はるな(福岡)",kana:"はるな",pref:"福岡県"},{id:"D022",name:"まふちゃん",kana:"まふちゃん",pref:"愛知県"},{id:"D023",name:"ふみ",kana:"ふみ",pref:"愛知県"},{id:"D024",name:"こたろう",kana:"こたろう",pref:"愛知県"},{id:"D025",name:"まい(愛知)",kana:"まい",pref:"愛知県"},{id:"D026",name:"かーふ",kana:"かーふ",pref:"愛知県"},{id:"D027",name:"ぷむむ",kana:"ぷむむ",pref:"京都府"},{id:"D028",name:"りり",kana:"りり",pref:"大阪府"},{id:"D029",name:"まーらいおん",kana:"まーらいおん",pref:"大阪府"},{id:"D030",name:"うみ",kana:"うみ",pref:"大阪府"},{id:"D031",name:"こし",kana:"こし",pref:"大阪府"},{id:"D032",name:"kk",kana:"けーけー",pref:"大阪府"},{id:"D033",name:"JURIA",kana:"じゅりあ",pref:"大阪府"},{id:"D034",name:"蓮見生活感",kana:"はすみせいかつかん",pref:"大阪府"},{id:"D035",name:"かのん",kana:"かのん",pref:"大阪府"},{id:"D036",name:"sua",kana:"すあ",pref:"大阪府"},{id:"D037",name:"ao",kana:"あお",pref:"大阪府"},{id:"D038",name:"たかまる",kana:"たかまる",pref:"大阪府"},{id:"D039",name:"kyu.",kana:"きゅう",pref:"大阪府"},{id:"D040",name:"れん",kana:"れん",pref:"大阪府"},{id:"D041",name:"ぬん",kana:"ぬん",pref:"大阪府"},{id:"D042",name:"KIMUTI",kana:"きむち",pref:"大阪府"},{id:"D043",name:"アキヤマ",kana:"あきやま",pref:"大阪府"},{id:"D044",name:"キョウ",kana:"きょう",pref:"大阪府"},{id:"D045",name:"うりゅう",kana:"うりゅう",pref:"大阪府"},{id:"D046",name:"高橋",kana:"たかはし",pref:"大阪府"},{id:"D047",name:"sakkii",kana:"さっきー",pref:"兵庫県"},{id:"D048",name:"ゆう",kana:"ゆう",pref:"兵庫県"},{id:"D049",name:"かんちゃん",kana:"かんちゃん",pref:"奈良県"},{id:"D050",name:"BE",kana:"べー",pref:"大阪府"},{id:"D051",name:"たくみ(兵庫)",kana:"たくみ",pref:"兵庫県"},{id:"D052",name:"yuto@KINGS",kana:"ゆうと",pref:"奈良県"},{id:"D053",name:"いこいこ",kana:"いこいこ",pref:"兵庫県"},{id:"D054",name:"レイ",kana:"れい",pref:"滋賀県"},{id:"D055",name:"バッキー",kana:"ばっきー",pref:"大阪府"},{id:"D056",name:"リン",kana:"りん",pref:"大阪府"},{id:"D057",name:"ぼち",kana:"ぼち",pref:"大阪府"},{id:"D058",name:"つよし",kana:"つよし",pref:"大阪府"},{id:"D059",name:"しゅんと",kana:"しゅんと",pref:"大阪府"},{id:"D060",name:"mii",kana:"みー",pref:"大阪府"},{id:"D061",name:"4iu",kana:"よいう",pref:"大阪府"},{id:"D062",name:"紫月",kana:"しづき",pref:"大阪府"},{id:"D063",name:"かず",kana:"かず",pref:"大阪府"},{id:"D064",name:"ゆづき",kana:"ゆづき",pref:"大阪府"},{id:"D065",name:"ぴこ",kana:"ぴこ",pref:"兵庫県"},{id:"D066",name:"あおい",kana:"あおい",pref:"奈良県"},{id:"D067",name:"mikuri",kana:"みくり",pref:"京都府"},{id:"D068",name:"Hiro",kana:"ひろ",pref:"東京都"},{id:"D069",name:"yuni",kana:"ゆに",pref:"福岡県"},{id:"D070",name:"みつき",kana:"みつき",pref:"福岡県"},{id:"D071",name:"もか",kana:"もか",pref:"愛知県"},{id:"D072",name:"KENT",kana:"けんと",pref:"愛知県"},{id:"D073",name:"日和",kana:"ひより",pref:"京都府"},{id:"D074",name:"ゆめ",kana:"ゆめ",pref:"大阪府"},{id:"D075",name:"かじゅ",kana:"かじゅ",pref:"大阪府"},{id:"D076",name:"みう",kana:"みう",pref:"大阪府"},{id:"D077",name:"なみ",kana:"なみ",pref:"大阪府"},{id:"D078",name:"れんか",kana:"れんか",pref:"大阪府"},{id:"D079",name:"はるな(大阪)",kana:"はるな",pref:"大阪府"},{id:"D080",name:"もと",kana:"もと",pref:"愛知県"},{id:"D081",name:"たまねぎ",kana:"たまねぎ",pref:"大阪府"},{id:"D082",name:"そうた",kana:"そうた",pref:"大阪府"},{id:"D083",name:"カイト",kana:"かいと",pref:"滋賀県"},{id:"D084",name:"asuka",kana:"あすか",pref:"大阪府"},{id:"D085",name:"373",kana:"みなみ",pref:"大阪府"},{id:"D086",name:"ももせ",kana:"ももせ",pref:"大阪府"},{id:"D087",name:"コウノ",kana:"こうの",pref:"大阪府"},{id:"D088",name:"saki",kana:"さき",pref:"大阪府"},{id:"D089",name:"すな",kana:"すな",pref:"大阪府"},{id:"D090",name:"7",kana:"なな",pref:"大阪府"},{id:"D091",name:"せーが",kana:"せーが",pref:"大阪府"},{id:"D092",name:"わかは",kana:"わかは",pref:"大阪府"},{id:"D093",name:"つかさ",kana:"つかさ",pref:"大阪府"},{id:"D094",name:"奏",kana:"かなで",pref:"大阪府"},{id:"D095",name:"あゆたん",kana:"あゆたん",pref:"大阪府"},{id:"D096",name:"ヘジョ",kana:"へじょ",pref:"大阪府"},{id:"D097",name:"37",kana:"みな",pref:"大阪府"},{id:"D098",name:"ふるちゃん",kana:"ふるちゃん",pref:"大阪府"},{id:"D099",name:"いっしー",kana:"いっしー",pref:"大阪府"},{id:"D100",name:"にこ",kana:"にこ",pref:"大阪府"},{id:"D101",name:"えいな",kana:"えいな",pref:"大阪府"},{id:"D102",name:"おしょこ",kana:"おしょこ",pref:"兵庫県"},{id:"D103",name:"龍角散",kana:"りゅうかくさん",pref:"大阪府"},{id:"D104",name:"マツモト",kana:"まつもと",pref:"大阪府"}];
+const AXES={card:[{key:'shuffle',label:'シャッフルの正確さ',guide:['毎回ミスがある','時々ミスや雑さが目立つ','平均的にこなせる','安定して正確・スムーズ','完璧・お手本レベル']},{key:'pitching',label:'ピッチングの正確さ',guide:['毎回コントロールが乱れる','時々ずれや強さにムラがある','平均的に届けられる','安定して正確に届けられる','狙い通り・お手本レベル']},{key:'cardspeed',label:'スピード',guide:['著しく遅く進行を妨げる','やや遅くテンポが乱れる','平均的な速さ','テンポよくスムーズ','非常に速く正確']},{key:'decktilt',label:'デックの傾き',guide:['常に傾いており見えてしまう','時々傾きが目立つ','多少傾くが支障なし','ほぼ水平を保てる','常に完璧な角度を維持']}],chip:[{key:'sizing',label:'チップサイジング',guide:['サイジングできていない','時々サイジングしていない','平均的にサイジングできる','安定してきれいにサイジング','常に完璧・見栄えも美しい']},{key:'count',label:'チップカウント',guide:['毎回数え間違いがある','時々ミスがある','平均的に正確','ほぼミスなく素早い','完璧・即座に正確']}],game:[{key:'calc',label:'計算力',guide:['毎回計算ミスがある','時々計算が遅い・間違える','平均的に計算できる','素早く正確に計算できる','瞬時に正確・どんな状況も対応']},{key:'rules',label:'ルール理解度',guide:['基本ルールが不安定','時々ルールに迷う','基本ルールは問題なし','応用ルールも対応できる','全ゲーム・全状況に完全対応']},{key:'mistake',label:'ミスの少なさ',guide:['毎回何らかのミスがある','時々ミスが目立つ','平均的なミス頻度','ほぼミスなく進行できる','ミスがほぼゼロ・自己修正も迅速']},{key:'tempo',label:'テンポコントロール',guide:['進行が遅くゲームが止まる','時々テンポが乱れる','平均的なテンポ','スムーズなテンポを維持','最高のテンポ・場を支配できる']},{key:'report',label:'フロアへの状況報告',guide:['報告できない・状況把握不可','報告が遅い・情報が不正確','最低限の報告はできる','素早く正確に報告できる','的確・簡潔・即座に状況共有']}],personality:[{key:'greeting',label:'挨拶・礼儀',guide:['挨拶がない・態度が悪い','挨拶が不十分・受け身','普通に挨拶できる','自発的に明るく挨拶できる','誰に対しても常に完璧な礼儀']},{key:'service',label:'お客様との接客',guide:['お客様対応に問題がある','接客がやや消極的','普通に対応できる','自然な会話・お客様が喜ぶ','場を盛り上げ指名・リピートされる']},{key:'obedience',label:'指示への素直さ',guide:['指示を無視・反発する','時々素直に従えない','指示通りに動ける','素直に即動ける・確認も丁寧','先読みして動ける・指示不要なレベル']},{key:'teamwork',label:'チームへの協力度',guide:['協力しない・自分本位','言われたことだけやる','普通に協力できる','積極的に周りをサポート','率先してチームを引っ張る']}]};
+const ratings={};const deducts={mess:0,gossip:0,other:0};const selected={eval:null,dealer:null};
+const toKana=s=>s.replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
+const norm=s=>toKana((s||'').toLowerCase());
+function checkPin(){
+  const pin=document.getElementById('pinInput').value;
+  const errEl=document.getElementById('pinError');
+  const sucEl=document.getElementById('pinSuccess');
+  errEl.style.display='none';sucEl.style.display='none';
+  if(pin.length<4)return;
+  const ev=PIN_MAP[pin];
+  if(!ev){errEl.style.display='block';document.getElementById('pinInput').value='';return;}
+  selected.eval=ev;
+  sucEl.textContent='✓ '+ev.name+'（'+ev.role+'）でログインしました';
+  sucEl.style.display='block';
+  setTimeout(()=>{
+    showScreen('screen0');
+    document.getElementById('evalSelectedLabel').textContent='✓ '+ev.name+'（'+ev.role+'）';
+    const m={'TD':'td','フロア':'floor','ピット':'pit','運営':'admin'};
+    document.getElementById('evalRole').value=m[ev.role]||'';
+  },1000);
 }
-
-// ラジオリスト描画
-function renderRadioList(containerId, list, type){
-  const el = document.getElementById(containerId);
+function initPrefSelect(){
+  const s=document.getElementById('prefFilter');
+  [...new Set(DEALERS.map(d=>d.pref))].sort().forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});
+}
+function renderRadioList(containerId,list,type){
+  const el=document.getElementById(containerId);
   if(!list.length){el.innerHTML='<div class="radio-empty">見つかりません</div>';return;}
   el.innerHTML='';
   list.forEach(x=>{
-    const isChecked = type==='eval'?(selected.eval&&selected.eval.id===x.id):(selected.dealer&&selected.dealer.id===x.id);
-    const sub = type==='eval'?x.role:x.pref;
-    const div = document.createElement('div');
-    div.className='radio-item';
-    div.innerHTML=`
-      <div class="radio-circle ${isChecked?'checked':''}" id="rc-${type}-${x.id}">
-        <div class="radio-dot"></div>
-      </div>
-      <div class="radio-label">${x.name}<span class="radio-sub">${sub}</span></div>`;
-    div.onclick=()=>selectRadio(type, x);
+    const isChecked=selected.dealer&&selected.dealer.id===x.id;
+    const div=document.createElement('div');div.className='radio-item';
+    div.innerHTML='<div class="radio-circle '+(isChecked?'checked':'')+'" id="rc-'+type+'-'+x.id+'"><div class="radio-dot"></div></div><div class="radio-label">'+x.name+'<span class="radio-sub">'+x.pref+'</span></div>';
+    div.onclick=()=>selectDealer(x);
     el.appendChild(div);
   });
 }
-
-function selectRadio(type, x){
-  selected[type] = x;
-  // ラジオ更新
-  document.querySelectorAll(`[id^="rc-${type}-"]`).forEach(el=>el.classList.remove('checked'));
-  const target = document.getElementById(`rc-${type}-${x.id}`);
-  if(target) target.classList.add('checked');
-  // 選択タグ表示
-  const label = type==='eval'?`✓ ${x.name}（${x.role}）`:`✓ ${x.name}（${x.pref}）`;
-  document.getElementById(type+'SelectedLabel').textContent = label;
-  document.getElementById(type+'SelectedTag').classList.add('show');
-  // ロール自動セット
-  if(type==='eval'&&x.role){
-    const m={'TD':'td','フロア':'floor','ピット':'pit','運営':'admin'};
-    document.getElementById('evalRole').value=m[x.role]||'';
-  }
+function selectDealer(x){
+  selected.dealer=x;
+  document.querySelectorAll('[id^="rc-dealer-"]').forEach(el=>el.classList.remove('checked'));
+  const t=document.getElementById('rc-dealer-'+x.id);if(t)t.classList.add('checked');
+  document.getElementById('dealerSelectedLabel').textContent='✓ '+x.name+'（'+x.pref+'）';
+  document.getElementById('dealerSelectedTag').classList.add('show');
 }
-
-function clearEval(){
-  selected.eval=null;
-  document.getElementById('evalSelectedTag').classList.remove('show');
-  document.getElementById('evalSearch').value='';
-  document.getElementById('evalRole').value='';
-  filterEval();
-}
-
 function clearDealer(){
   selected.dealer=null;
   document.getElementById('dealerSelectedTag').classList.remove('show');
@@ -399,148 +244,74 @@ function clearDealer(){
   document.getElementById('prefFilter').value='';
   filterDealer();
 }
-
-function filterEval(){
-  const q = norm(document.getElementById('evalSearch').value);
-  const filtered = EVALUATORS.filter(x=>!q||norm(x.name).includes(q)||norm(x.kana).includes(q));
-  renderRadioList('evalRadioList', filtered, 'eval');
-}
-
 function filterDealer(){
-  const q = norm(document.getElementById('dealerSearch').value);
-  const pref = document.getElementById('prefFilter').value;
-  const filtered = DEALERS.filter(x=>(!q||norm(x.name).includes(q)||norm(x.kana).includes(q))&&(!pref||x.pref===pref));
-  renderRadioList('dealerRadioList', filtered, 'dealer');
+  const q=norm(document.getElementById('dealerSearch').value);
+  const pref=document.getElementById('prefFilter').value;
+  const filtered=DEALERS.filter(x=>(!q||norm(x.name).includes(q)||norm(x.kana).includes(q))&&(!pref||x.pref===pref));
+  renderRadioList('dealerRadioList',filtered,'dealer');
 }
-
-// 評価行を構築
-function buildRows(containerId, axisKey){
-  const el = document.getElementById(containerId);
-  el.innerHTML='';
+function buildRows(containerId,axisKey){
+  const el=document.getElementById(containerId);el.innerHTML='';
   AXES[axisKey].forEach(({key,label,guide})=>{
-    if(ratings[key]===undefined) ratings[key]=0;
-    const div = document.createElement('div');
-    div.className='row';
-    const guideHtml = guide.map((g,i)=>`<span class="guide-item" id="g-${key}-${i+1}">★${i+1}：${g}</span>`).join('');
-    div.innerHTML=`
-      <div class="row-top">
-        <div class="row-name">${label}</div>
-        <div class="stars" id="stars-${key}"></div>
-      </div>
-      <div class="guide" id="guide-${key}">${guideHtml}</div>`;
-    el.appendChild(div);
-    buildStarEl(key);
+    if(ratings[key]===undefined)ratings[key]=0;
+    const div=document.createElement('div');div.className='row';
+    const guideHtml=guide.map((g,i)=>'<span class="guide-item" id="g-'+key+'-'+(i+1)+'">★'+(i+1)+'：'+g+'</span>').join('');
+    div.innerHTML='<div class="row-top"><div class="row-name">'+label+'</div><div class="stars" id="stars-'+key+'"></div></div><div class="guide" id="guide-'+key+'">'+guideHtml+'</div>';
+    el.appendChild(div);buildStarEl(key);
   });
 }
-
 function buildStarEl(key){
-  const el = document.getElementById('stars-'+key);
-  if(!el) return;
-  el.innerHTML='';
+  const el=document.getElementById('stars-'+key);if(!el)return;el.innerHTML='';
   for(let i=1;i<=5;i++){
-    const s = document.createElement('span');
-    s.className='star'+(ratings[key]>=i?' on':'');
-    s.textContent='★';
-    const v=i;
-    s.onclick=()=>{ratings[key]=(ratings[key]===v)?0:v; buildStarEl(key); updateGuide(key);};
+    const s=document.createElement('span');s.className='star'+(ratings[key]>=i?' on':'');s.textContent='★';
+    const v=i;s.onclick=()=>{ratings[key]=(ratings[key]===v)?0:v;buildStarEl(key);updateGuide(key);};
     el.appendChild(s);
-  }
-  updateGuide(key);
+  }updateGuide(key);
 }
-
 function updateGuide(key){
   const v=ratings[key];
-  for(let i=1;i<=5;i++){
-    const g=document.getElementById(`g-${key}-${i}`);
-    if(g) g.className='guide-item'+(v===i?' current':'');
-  }
+  for(let i=1;i<=5;i++){const g=document.getElementById('g-'+key+'-'+i);if(g)g.className='guide-item'+(v===i?' current':'');}
 }
-
-function rebuildAll(){
-  buildRows('rows-card','card');
-  buildRows('rows-chip','chip');
-  buildRows('rows-game','game');
-  buildRows('rows-personality','personality');
-}
-
-function changeDeduct(key, delta){
-  deducts[key]=Math.max(0,deducts[key]+delta);
-  document.getElementById(key+'-count').textContent=deducts[key];
-}
-
+function rebuildAll(){buildRows('rows-card','card');buildRows('rows-chip','chip');buildRows('rows-game','game');buildRows('rows-personality','personality');}
+function changeDeduct(key,delta){deducts[key]=Math.max(0,deducts[key]+delta);document.getElementById(key+'-count').textContent=deducts[key];}
 const SUBS=['ステップ 1 / 3','ステップ 2 / 3','ステップ 3 / 3'];
-
 function goTo(n){
   if(n===1){
     if(!selected.eval){alert('評価者を選択してください');return;}
     if(!document.getElementById('evalRole').value){alert('ロールを選択してください');return;}
     if(!selected.dealer){alert('ディーラーを選択してください');return;}
   }
-  document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active',i===n));
-  for(let i=0;i<3;i++){
-    const d=document.getElementById('dot'+i);
-    d.classList.remove('active','done');
-    if(i===n) d.classList.add('active');
-    else if(i<n) d.classList.add('done');
-  }
-  document.getElementById('screenSub').textContent=SUBS[n];
-  window.scrollTo(0,0);
+  document.querySelectorAll('.screen').forEach((s,i)=>{
+    s.classList.remove('active');
+    if(s.id==='screen'+n)s.classList.add('active');
+  });
+  for(let i=0;i<3;i++){const d=document.getElementById('dot'+i);d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');}
+  document.getElementById('screenSub').textContent=SUBS[n];window.scrollTo(0,0);
 }
-
 async function submitForm(){
   const now=new Date();
-  const dateStr=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  const comments={};
-  document.querySelectorAll('textarea[data-comment]').forEach(t=>{comments[t.dataset.comment]=t.value.trim();});
+  const dateStr=now.getFullYear()+'/'+(now.getMonth()+1).toString().padStart(2,'0')+'/'+now.getDate().toString().padStart(2,'0')+' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  const comments={};document.querySelectorAll('textarea[data-comment]').forEach(t=>{comments[t.dataset.comment]=t.value.trim();});
   const allAxes=[...AXES.card,...AXES.chip,...AXES.game,...AXES.personality];
-  const scoreData={};
-  allAxes.forEach(({key})=>scoreData[key]=ratings[key]||0);
-  const payload={
-    datetime:dateStr,
-    evaluator_id:selected.eval.id, evaluator_name:selected.eval.name,
-    evaluator_role:document.getElementById('evalRole').value,
-    dealer_id:selected.dealer.id, dealer_name:selected.dealer.name, dealer_pref:selected.dealer.pref,
-    ...scoreData,
-    comment_card:comments.card||'', comment_chip:comments.chip||'',
-    comment_game:comments.game||'', comment_personality:comments.personality||'',
-    comment_deduct:comments.deduct||'', comment_overall:comments.overall||'',
-    deduct_mess:deducts.mess, deduct_gossip:deducts.gossip, deduct_other:deducts.other,
-  };
-  document.getElementById('loading').style.display='block';
-  document.getElementById('error-msg').style.display='none';
-  try {
+  const scoreData={};allAxes.forEach(({key})=>scoreData[key]=ratings[key]||0);
+  const payload={datetime:dateStr,evaluator_id:selected.eval.id,evaluator_name:selected.eval.name,evaluator_role:document.getElementById('evalRole').value,dealer_id:selected.dealer.id,dealer_name:selected.dealer.name,dealer_pref:selected.dealer.pref,...scoreData,comment_card:comments.card||'',comment_chip:comments.chip||'',comment_game:comments.game||'',comment_personality:comments.personality||'',comment_deduct:comments.deduct||'',comment_overall:comments.overall||'',deduct_mess:deducts.mess,deduct_gossip:deducts.gossip,deduct_other:deducts.other};
+  document.getElementById('loading').style.display='block';document.getElementById('error-msg').style.display='none';
+  try{
     await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    document.getElementById('loading').style.display='none';
-    document.getElementById('toast').style.display='block';
+    document.getElementById('loading').style.display='none';document.getElementById('toast').style.display='block';
     setTimeout(()=>{document.getElementById('toast').style.display='none';resetForm();},2500);
-  } catch(e){
-    document.getElementById('loading').style.display='none';
-    document.getElementById('error-msg').style.display='block';
-  }
+  }catch(e){document.getElementById('loading').style.display='none';document.getElementById('error-msg').style.display='block';}
 }
-
 function resetForm(){
-  Object.keys(ratings).forEach(k=>ratings[k]=0);
-  Object.keys(deducts).forEach(k=>deducts[k]=0);
+  Object.keys(ratings).forEach(k=>ratings[k]=0);Object.keys(deducts).forEach(k=>deducts[k]=0);
   ['mess','gossip','other'].forEach(k=>document.getElementById(k+'-count').textContent='0');
   document.querySelectorAll('textarea').forEach(t=>t.value='');
-  clearEval(); clearDealer();
-  rebuildAll();
-  goTo(0);
+  selected.dealer=null;document.getElementById('dealerSelectedTag').classList.remove('show');
+  rebuildAll();showScreen('screen-pin');
+  document.getElementById('pinInput').value='';document.getElementById('pinSuccess').style.display='none';
 }
-
-// 初期化
-function init(){
-  initPrefSelect();
-  filterEval();
-  filterDealer();
-  rebuildAll();
-}
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));}
+initPrefSelect();filterDealer();rebuildAll();
 </script>
 </body>
 </html>
