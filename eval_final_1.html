@@ -300,7 +300,26 @@ function resetForm(){
   showScreen('screen-pin');
 }
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));}
-initPrefSelect();filterDealer();rebuildAll();
+// スプレッドシートからディーラーリストを読み込む
+async function loadDealers(){
+  try {
+    const res = await fetch(GAS_URL + '?type=dealers');
+    const json = await res.json();
+    if(json.status === 'ok' && json.dealers.length > 0){
+      // スプレッドシートのデータで上書き
+      DEALERS.length = 0;
+      json.dealers.forEach(d => DEALERS.push(d));
+    }
+  } catch(e){
+    console.log('ディーラーリスト読み込み失敗、ローカルデータを使用');
+  } finally {
+    initPrefSelect();
+    filterDealer();
+  }
+}
+
+loadDealers();
+rebuildAll();
 </script>
 </body>
 </html>
