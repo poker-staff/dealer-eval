@@ -208,8 +208,7 @@ const toKana=s=>s.replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt
 const norm=s=>toKana((s||'').toLowerCase());
 
 // 役職（固定）
-const ROLES=['ディーラー','フロア','TD','PLO','シーティング','運営'];
-
+const ROLES=['ディーラー','フロア','TD','PLO','シーティング','受付','ピット','ドリンカー','MIX','配信','物販','チップ','清掃','買い出し','その他','運営'];
 let allEvals=[],allInfo={},dealers=[],currentDealer=null,currentSort='tech',sortAsc=false;
 let allTags=JSON.parse(localStorage.getItem('dealer_tags')||'[]');
 let dealerTags=JSON.parse(localStorage.getItem('dealer_tag_map')||'{}');
