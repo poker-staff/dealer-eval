@@ -90,18 +90,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
       </div>
       <div id="pinError" style="display:none;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;font-size:13px;color:#dc2626;text-align:center">PINが正しくありません</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        <button class="pin-btn" onclick="pinPress('1')">1</button>
-        <button class="pin-btn" onclick="pinPress('2')">2</button>
-        <button class="pin-btn" onclick="pinPress('3')">3</button>
-        <button class="pin-btn" onclick="pinPress('4')">4</button>
-        <button class="pin-btn" onclick="pinPress('5')">5</button>
-        <button class="pin-btn" onclick="pinPress('6')">6</button>
-        <button class="pin-btn" onclick="pinPress('7')">7</button>
-        <button class="pin-btn" onclick="pinPress('8')">8</button>
-        <button class="pin-btn" onclick="pinPress('9')">9</button>
-        <button class="pin-btn" onclick="pinPress('0')">0</button>
-        <button class="pin-btn pin-del" onclick="pinDelete()">⌫</button>
-        <button class="pin-btn pin-ok" onclick="pinSubmit()">✓</button>
+       <button class="pin-btn" id="p1">1</button>
+        <button class="pin-btn" id="p2">2</button>
+        <button class="pin-btn" id="p3">3</button>
+        <button class="pin-btn" id="p4">4</button>
+        <button class="pin-btn" id="p5">5</button>
+        <button class="pin-btn" id="p6">6</button>
+        <button class="pin-btn" id="p7">7</button>
+        <button class="pin-btn" id="p8">8</button>
+        <button class="pin-btn" id="p9">9</button>
+        <button class="pin-btn" id="p0">0</button>
+        <button class="pin-btn pin-del" id="pdel">⌫</button>
+        <button class="pin-btn pin-ok" id="pok">✓</button>
       </div>
     </div>
   </div>
@@ -421,3 +421,16 @@ rebuildAll();
 </script>
 </body>
 </html>
+// テンキーイベント設定
+document.getElementById('p1').addEventListener('click',()=>pinPress('1'));
+document.getElementById('p2').addEventListener('click',()=>pinPress('2'));
+document.getElementById('p3').addEventListener('click',()=>pinPress('3'));
+document.getElementById('p4').addEventListener('click',()=>pinPress('4'));
+document.getElementById('p5').addEventListener('click',()=>pinPress('5'));
+document.getElementById('p6').addEventListener('click',()=>pinPress('6'));
+document.getElementById('p7').addEventListener('click',()=>pinPress('7'));
+document.getElementById('p8').addEventListener('click',()=>pinPress('8'));
+document.getElementById('p9').addEventListener('click',()=>pinPress('9'));
+document.getElementById('p0').addEventListener('click',()=>pinPress('0'));
+document.getElementById('pdel').addEventListener('click',()=>pinDelete());
+document.getElementById('pok').addEventListener('click',()=>pinSubmit());
