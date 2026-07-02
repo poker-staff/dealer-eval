@@ -227,16 +227,16 @@ window.pinPress=function(n){
   updatePinDisplay();
   if(pinValue.length===4)setTimeout(pinSubmit,300);
 }
-function pinDelete(){
+window.pinDelete=function(){
   pinValue=pinValue.slice(0,-1);
   updatePinDisplay();
 }
-function updatePinDisplay(){
+window.updatePinDisplay=function(){
   const dots=pinValue.split('').map(()=>'●').join('');
   const dashes='––––'.slice(pinValue.length);
   document.getElementById('pinDots').textContent=dots+dashes;
 }
-function pinSubmit(){
+window.pinSubmit=function(){
   const ev=PIN_MAP[pinValue];
   document.getElementById('pinError').style.display='none';
   if(!ev){
