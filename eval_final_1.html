@@ -220,8 +220,8 @@ const AXES={card:[{key:'shuffle',label:'シャッフルの正確さ',guide:['毎
 const ratings={};const deducts={mess:0,gossip:0,other:0};const selected={eval:null,dealer:null};
 const toKana=s=>s.replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
 const norm=s=>toKana((s||'').toLowerCase());
-let pinValue='';
-function pinPress(n){
+window.pinValue='';
+window.pinPress=function(n){
   if(pinValue.length>=4)return;
   pinValue+=n;
   updatePinDisplay();
