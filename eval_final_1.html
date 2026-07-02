@@ -127,6 +127,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
     <select class="pref-select" id="prefFilter" onchange="filterDealer()">
       <option value="">都道府県で絞り込み</option>
     </select>
+    <select class="pref-select" id="roleFilter" onchange="filterDealer()" style="margin-bottom:8px">
+      <option value="">役職で絞り込み</option>
+    </select>
     <div class="radio-list" id="dealerRadioList"></div>
     <div class="selected-tag" id="dealerSelectedTag">
       <span id="dealerSelectedLabel"></span>
@@ -301,7 +304,14 @@ function clearDealer(){
 function filterDealer(){
   const q=norm(document.getElementById('dealerSearch').value);
   const pref=document.getElementById('prefFilter').value;
-  renderRadioList(DEALERS.filter(x=>(!q||norm(x.name).includes(q)||norm(x.kana).includes(q))&&(!pref||x.pref===pref)));
+  const role=document.getElementById('roleFilter').value;
+  renderRadioList(DEALERS.filter(x=>{
+    const nameMatch=!q||norm(x.name).includes(q)||norm(x.kana).includes(q);
+    const prefMatch=!pref||x.pref===pref;
+    const roles=dealerRoleMap[x.id]||[];
+    const roleMatch=!role||roles.includes(role);
+    return nameMatch&&prefMatch&&roleMatch;
+  }));
 }
 function buildRows(containerId,axisKey){
   const el=document.getElementById(containerId);el.innerHTML='';
@@ -401,6 +411,8 @@ function resetForm(){
   showScreen('screen-pin');
 }
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));}
+let dealerRoleMap={};
+
 async function loadDealers(){
   try{
     const res=await fetch(GAS_URL+'?type=dealers');
@@ -409,12 +421,32 @@ async function loadDealers(){
       DEALERS.length=0;
       json.dealers.forEach(d=>DEALERS.push(d));
     }
+    // ディーラー情報（役職）も読み込む
+    const res2=await fetch(GAS_URL);
+    const json2=await res2.json();
+    dealerRoleMap={};
+    (json2.info||[]).forEach(i=>{
+      if(i['役職']&&i['ディーラーID']){
+        dealerRoleMap[i['ディーラーID']]=(i['役職']||'').split(',').filter(Boolean);
+      }
+    });
+    initRoleFilter();
   }catch(e){
-    console.log('ディーラーリスト読み込み失敗、ローカルデータを使用');
+    console.log('読み込み失敗、ローカルデータを使用');
   }finally{
     initPrefSelect();
     filterDealer();
   }
+}
+
+function initRoleFilter(){
+  const roles=new Set();
+  Object.values(dealerRoleMap).forEach(arr=>arr.forEach(r=>roles.add(r)));
+  const sel=document.getElementById('roleFilter');
+  sel.innerHTML='<option value="">役職で絞り込み</option>';
+  [...roles].sort().forEach(r=>{
+    const o=document.createElement('option');o.value=r;o.textContent=r;sel.appendChild(o);
+  });
 }
 loadDealers();
 rebuildAll();
