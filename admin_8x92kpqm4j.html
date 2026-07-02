@@ -17,9 +17,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .search-row{display:flex;gap:8px;margin-bottom:8px}
 .search-input{flex:1;padding:9px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;font-family:inherit}
 .pref-sel{padding:9px 8px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:12px;max-width:110px;-webkit-appearance:none}
-.sort-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.sort-btn{padding:5px 10px;border-radius:20px;border:1px solid #e5e5e5;background:#fff;color:#666;font-size:11px;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.sort-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.sort-btn{padding:5px 10px;border-radius:20px;border:1px solid #e5e5e5;background:#fff;color:#666;font-size:11px;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent}
 .sort-btn.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.filter-section{margin-bottom:8px}
+.filter-label{font-size:11px;color:#999;margin-bottom:4px}
+.tag-filter-row{display:flex;gap:6px;flex-wrap:wrap}
+.tag-filter{padding:4px 10px;border-radius:20px;border:1px solid #e5e5e5;background:#fff;color:#666;font-size:11px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tag-filter.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.role-filter{padding:4px 10px;border-radius:20px;border:1px solid #e5e5e5;background:#fff;color:#666;font-size:11px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.role-filter.active{background:#7c3aed;color:#fff;border-color:#7c3aed}
 .dealer-item{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .dealer-item:active{background:#f9f9f9}
 .avatar{width:42px;height:42px;border-radius:50%;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#1d4ed8;flex-shrink:0}
@@ -27,14 +34,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .dealer-name{font-size:14px;font-weight:500}
 .dealer-meta{font-size:11px;color:#999;margin-top:2px}
 .dealer-wage{font-size:11px;color:#059669;margin-top:2px;font-weight:500}
+.dealer-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tag-pill{font-size:10px;padding:2px 7px;border-radius:20px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.role-pill{font-size:10px;padding:2px 7px;border-radius:20px;background:#f3e8ff;color:#7c3aed;border:1px solid #d8b4fe}
 .score-pills{display:flex;flex-direction:column;gap:3px;flex-shrink:0}
 .pill{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;text-align:center}
 .pill-tech{background:#eff6ff;color:#1d4ed8}
 .pill-per{background:#f0fdf4;color:#166534}
 .pill-wage{background:#fefce8;color:#854d0e}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;color:#666;cursor:pointer;margin-bottom:1rem;background:none;border:none;padding:4px 0;-webkit-tap-highlight-color:transparent}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;color:#666;cursor:pointer;margin-bottom:1rem;background:none;border:none;padding:4px 0}
 .tab-row{display:flex;border-bottom:1px solid #e5e5e5;margin-bottom:1rem;overflow-x:auto}
-.tab{padding:8px 14px;font-size:13px;color:#999;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tab{padding:8px 12px;font-size:13px;color:#999;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .tab.active{color:#1a1a1a;border-bottom-color:#1a1a1a}
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
 .summary-box{background:#f9f9f9;border-radius:8px;padding:10px}
@@ -67,8 +77,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .dealer-count{font-size:12px;color:#999;margin-bottom:8px}
 .form-field{margin-bottom:12px}
 .form-label{font-size:12px;color:#666;margin-bottom:4px;display:flex;align-items:center;gap:4px}
-.form-label .badge{font-size:10px;padding:1px 6px;border-radius:20px;background:#fef9c3;color:#854d0e}
+.badge{font-size:10px;padding:1px 6px;border-radius:20px;background:#fef9c3;color:#854d0e}
 .form-input{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;font-family:inherit}
+.form-select{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:14px;-webkit-appearance:none}
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
 .toggle-label{font-size:14px;color:#1a1a1a}
 .toggle{width:44px;height:26px;border-radius:13px;background:#e5e5e5;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
@@ -77,6 +88,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
 .toggle.on::after{left:21px}
 .save-btn{width:100%;padding:12px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:14px;font-weight:500;cursor:pointer;margin-top:4px}
 .save-toast{display:none;margin-top:8px;padding:10px;background:#dcfce7;border:1px solid #86efac;color:#166534;border-radius:8px;font-size:13px;text-align:center}
+.tag-input-row{display:flex;gap:8px;margin-bottom:8px}
+.tag-input{flex:1;padding:8px 12px;border-radius:8px;border:1px solid #e5e5e5;background:#f9f9f9;color:#1a1a1a;font-size:13px;font-family:inherit}
+.tag-add-btn{padding:8px 14px;border-radius:8px;border:1px solid #3b82f6;background:#3b82f6;color:#fff;font-size:13px;cursor:pointer}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag-item{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;font-size:12px;cursor:pointer}
+.tag-item.attached{background:#dcfce7;color:#166534;border-color:#86efac}
+.tag-item .tag-remove{cursor:pointer;font-size:14px;line-height:1;margin-left:2px}
+.role-item{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;background:#f3e8ff;color:#7c3aed;border:1px solid #d8b4fe;font-size:12px;cursor:pointer}
+.role-item.attached{background:#7c3aed;color:#fff;border-color:#7c3aed}
+.role-item .tag-remove{cursor:pointer;font-size:14px;line-height:1;margin-left:2px}
+.pin-screen{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+.pin-btn{padding:16px;font-size:20px;font-weight:500;border-radius:10px;border:1px solid #e5e5e5;background:#fff;cursor:pointer;width:100%;-webkit-tap-highlight-color:transparent}
+.pin-btn:active{background:#f5f5f0}
+.pin-del{background:#f9f9f9}
+.pin-ok{border-color:#1a1a1a;background:#1a1a1a;color:#fff}
 </style>
 </head>
 <body>
@@ -85,23 +111,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
   <div class="sub">運営専用</div>
 </div>
 <div class="wrap">
+
 <div class="screen active" id="screen-pin">
-  <div style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem">
+  <div class="pin-screen">
     <div style="font-size:40px;margin-bottom:1rem">🔐</div>
     <div style="font-size:18px;font-weight:600;margin-bottom:6px">管理画面</div>
-    <div style="font-size:13px;color:#999;margin-bottom:2rem">運営専用PINを入力してください</div>
+    <div style="font-size:13px;color:#999;margin-bottom:1.5rem">運営専用PINを入力してください</div>
     <div style="width:100%;max-width:280px">
-      <input type="tel" maxlength="4" id="adminPin"
-        style="width:100%;padding:14px;font-size:24px;text-align:center;border-radius:12px;border:2px solid #e5e5e5;background:#f9f9f9;letter-spacing:8px;font-family:inherit"
-        placeholder="••••" oninput="checkAdminPin()">
-      <div id="pinError" style="display:none;margin-top:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;font-size:13px;color:#dc2626;text-align:center">PINが正しくありません</div>
+      <div style="width:100%;padding:14px;font-size:28px;text-align:center;border-radius:12px;border:2px solid #e5e5e5;background:#f9f9f9;margin-bottom:12px;min-height:60px;display:flex;align-items:center;justify-content:center">
+        <span id="adminPinDots">––––</span>
+      </div>
+      <div id="adminPinError" style="display:none;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;font-size:13px;color:#dc2626;text-align:center">PINが正しくありません</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <button class="pin-btn" id="ap1">1</button>
+        <button class="pin-btn" id="ap2">2</button>
+        <button class="pin-btn" id="ap3">3</button>
+        <button class="pin-btn" id="ap4">4</button>
+        <button class="pin-btn" id="ap5">5</button>
+        <button class="pin-btn" id="ap6">6</button>
+        <button class="pin-btn" id="ap7">7</button>
+        <button class="pin-btn" id="ap8">8</button>
+        <button class="pin-btn" id="ap9">9</button>
+        <button class="pin-btn" id="ap0">0</button>
+        <button class="pin-btn pin-del" id="apdel">⌫</button>
+        <button class="pin-btn pin-ok" id="apok">✓</button>
+      </div>
     </div>
   </div>
 </div>
+
 <div class="screen" id="s-list">
   <button class="reload-btn" onclick="loadData()">🔄 データを最新に更新</button>
   <div class="search-row">
-    <input class="search-input" id="listSearch" placeholder="名前で検索（ひらがなOK）..." oninput="renderList()">
+    <input class="search-input" id="listSearch" placeholder="名前・メモ・タグで検索..." oninput="renderList()">
     <select class="pref-sel" id="listPref" onchange="renderList()"><option value="">都道府県</option></select>
   </div>
   <div class="sort-row">
@@ -112,43 +154,90 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;bac
     <button class="sort-btn" id="sort-name" onclick="setSort('name')">50音</button>
     <button class="sort-btn" id="sort-pref" onclick="setSort('pref')">都道府県</button>
   </div>
+  <div class="filter-section">
+    <div class="filter-label">役職で絞り込み</div>
+    <div class="tag-filter-row" id="roleFilterRow"></div>
+  </div>
+  <div class="filter-section">
+    <div class="filter-label">タグで絞り込み</div>
+    <div class="tag-filter-row" id="tagFilterRow"></div>
+  </div>
   <div class="dealer-count" id="dealer-count"></div>
   <div id="dealerList"><div class="loading-msg">読み込み中...</div></div>
 </div>
+
 <div class="screen" id="s-detail">
   <button class="back-btn" onclick="goList()">← 一覧に戻る</button>
   <div class="card" style="text-align:center;padding:1.5rem">
     <div style="width:60px;height:60px;border-radius:50%;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:#1d4ed8;margin:0 auto 8px" id="detail-avatar"></div>
     <div style="font-size:17px;font-weight:600" id="detail-name"></div>
     <div style="font-size:12px;color:#999;margin-top:3px" id="detail-meta"></div>
+    <div class="dealer-tags" style="justify-content:center;margin-top:8px" id="detail-tags"></div>
   </div>
   <div class="tab-row">
     <div class="tab active" id="tab-summary" onclick="switchTab('summary')">サマリー</div>
     <div class="tab" id="tab-evals" onclick="switchTab('evals')">回答一覧</div>
-    <div class="tab" id="tab-info" onclick="switchTab('info')">給与・交通</div>
+    <div class="tab" id="tab-profile" onclick="switchTab('profile')">プロフィール</div>
+    <div class="tab" id="tab-wage" onclick="switchTab('wage')">給与・交通</div>
+    <div class="tab" id="tab-tags" onclick="switchTab('tags')">役職・タグ</div>
   </div>
   <div id="tab-content-summary"></div>
   <div id="tab-content-evals" style="display:none"></div>
-  <div id="tab-content-info" style="display:none"></div>
+  <div id="tab-content-profile" style="display:none"></div>
+  <div id="tab-content-wage" style="display:none"></div>
+  <div id="tab-content-tags" style="display:none"></div>
 </div>
+
+<div class="screen" id="s-tagmanager">
+  <button class="back-btn" onclick="showScreen('s-detail');switchTab('tags')">← 戻る</button>
+  <div class="card">
+    <div class="card-title">🏷️ タグ管理（自由タグ）</div>
+    <div class="tag-input-row">
+      <input class="tag-input" id="newTagInput" placeholder="新しいタグ名...">
+      <button class="tag-add-btn" onclick="createTag()">作成</button>
+    </div>
+    <div class="tag-list" id="allTagsList"></div>
+  </div>
+</div>
+
 </div>
 <script>
 const ADMIN_PIN='2913';
 const GAS_URL='https://script.google.com/macros/s/AKfycbyGKkJjfm6bAcgkC-xql9LckYhCfdLNnhmseBDh390MnbT068GC6WQJOu3I0MJJt-TY/exec';
 const toKana=s=>s.replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
 const norm=s=>toKana((s||'').toLowerCase());
+
+// 役職（固定）
+const ROLES=['ディーラー','フロア','TD','PLO','シーティング','運営'];
+
 let allEvals=[],allInfo={},dealers=[],currentDealer=null,currentSort='tech',sortAsc=false;
-const TECH_KEYS=[{key:'シャッフル'},{key:'ピッチング'},{key:'スピード'},{key:'デックの傾き'},{key:'チップサイジング'},{key:'チップカウント'},{key:'計算力'},{key:'ルール理解度'},{key:'ミスの少なさ'},{key:'テンポ'},{key:'フロア報告'}];
-const PER_KEYS=[{key:'挨拶・礼儀'},{key:'お客様接客'},{key:'指示への素直さ'},{key:'チーム協力'}];
+let allTags=JSON.parse(localStorage.getItem('dealer_tags')||'[]');
+let dealerTags=JSON.parse(localStorage.getItem('dealer_tag_map')||'{}');
+let dealerRoles=JSON.parse(localStorage.getItem('dealer_role_map')||'{}');
+let activeTagFilter=null;
+let activeRoleFilter=null;
+let adminPinValue='';
+
 function stars(n){return n>0?'★'.repeat(Math.round(n))+'☆'.repeat(5-Math.round(n)):'-';}
 function avgOf(evals,key){const v=evals.map(e=>Number(e[key])||0).filter(v=>v>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;}
 function overallAvg(evals,keys){const v=keys.map(({key})=>avgOf(evals,key)).filter(v=>v>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;}
-function checkAdminPin(){
-  const pin=document.getElementById('adminPin').value;
-  if(pin.length<4)return;
-  if(pin===ADMIN_PIN){showScreen('s-list');loadData();}
-  else{document.getElementById('pinError').style.display='block';document.getElementById('adminPin').value='';}
+function getWage(d){const info=allInfo[d.id];return info?Number(info['今回時給'])||0:0;}
+function getDealerTags(id){return dealerTags[id]||[];}
+function getDealerRoles(id){return dealerRoles[id]||[];}
+function saveStorage(){localStorage.setItem('dealer_tags',JSON.stringify(allTags));localStorage.setItem('dealer_tag_map',JSON.stringify(dealerTags));localStorage.setItem('dealer_role_map',JSON.stringify(dealerRoles));}
+
+const TECH_KEYS=[{key:'シャッフル'},{key:'ピッチング'},{key:'スピード'},{key:'デックの傾き'},{key:'チップサイジング'},{key:'チップカウント'},{key:'計算力'},{key:'ルール理解度'},{key:'ミスの少なさ'},{key:'テンポ'},{key:'フロア報告'}];
+const PER_KEYS=[{key:'挨拶・礼儀'},{key:'お客様接客'},{key:'指示への素直さ'},{key:'チーム協力'}];
+
+// PIN認証
+function adminPinPress(n){if(adminPinValue.length>=4)return;adminPinValue+=n;updateAdminPinDisplay();if(adminPinValue.length===4)setTimeout(adminPinSubmit,300);}
+function adminPinDelete(){adminPinValue=adminPinValue.slice(0,-1);updateAdminPinDisplay();}
+function updateAdminPinDisplay(){document.getElementById('adminPinDots').textContent=adminPinValue.split('').map(()=>'●').join('')+'––––'.slice(adminPinValue.length);}
+function adminPinSubmit(){
+  if(adminPinValue===ADMIN_PIN){showScreen('s-list');loadData();}
+  else{document.getElementById('adminPinError').style.display='block';adminPinValue='';updateAdminPinDisplay();}
 }
+
 async function loadData(){
   document.getElementById('dealerList').innerHTML='<div class="loading-msg">読み込み中...</div>';
   try{
@@ -161,9 +250,37 @@ async function loadData(){
     const prefs=[...new Set(dealers.map(d=>d.pref))].sort();
     const sel=document.getElementById('listPref');sel.innerHTML='<option value="">都道府県</option>';
     prefs.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;sel.appendChild(o);});
+    renderRoleFilters();
+    renderTagFilters();
     renderList();
   }catch(e){document.getElementById('dealerList').innerHTML='<div class="empty">読み込みに失敗しました。</div>';}
 }
+
+function renderRoleFilters(){
+  const row=document.getElementById('roleFilterRow');
+  row.innerHTML='';
+  ROLES.forEach(role=>{
+    const btn=document.createElement('button');
+    btn.className='role-filter'+(activeRoleFilter===role?' active':'');
+    btn.textContent=role;
+    btn.onclick=()=>{activeRoleFilter=activeRoleFilter===role?null:role;renderRoleFilters();renderList();};
+    row.appendChild(btn);
+  });
+}
+
+function renderTagFilters(){
+  const row=document.getElementById('tagFilterRow');
+  if(!allTags.length){row.innerHTML='<span style="font-size:11px;color:#ccc">タグなし</span>';return;}
+  row.innerHTML='';
+  allTags.forEach(tag=>{
+    const btn=document.createElement('button');
+    btn.className='tag-filter'+(activeTagFilter===tag?' active':'');
+    btn.textContent=tag;
+    btn.onclick=()=>{activeTagFilter=activeTagFilter===tag?null:tag;renderTagFilters();renderList();};
+    row.appendChild(btn);
+  });
+}
+
 function setSort(key){
   if(currentSort===key)sortAsc=!sortAsc;else{currentSort=key;sortAsc=false;}
   document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
@@ -173,7 +290,7 @@ function setSort(key){
   document.getElementById('sort-'+key).textContent=(labels[key]||key)+(key==='name'||key==='pref'?'':arrow);
   renderList();
 }
-function getWage(d){const info=allInfo[d.id];return info?Number(info['今回時給'])||0:0;}
+
 function sortDealers(list){
   return [...list].sort((a,b)=>{
     let diff=0;
@@ -186,10 +303,23 @@ function sortDealers(list){
     return sortAsc?-diff:diff;
   });
 }
+
 function renderList(){
   const q=norm(document.getElementById('listSearch').value);
   const pref=document.getElementById('listPref').value;
-  let filtered=dealers.filter(d=>(!q||norm(d.name).includes(q))&&(!pref||d.pref===pref));
+  let filtered=dealers.filter(d=>{
+    const info=allInfo[d.id]||{};
+    const tags=getDealerTags(d.id);
+    const roles=getDealerRoles(d.id);
+    const memo=norm(info['備考']||'');
+    const tagStr=norm(tags.join(' '));
+    const roleStr=norm(roles.join(' '));
+    const nameMatch=!q||norm(d.name).includes(q)||memo.includes(q)||tagStr.includes(q)||roleStr.includes(q);
+    const prefMatch=!pref||d.pref===pref;
+    const tagMatch=!activeTagFilter||tags.includes(activeTagFilter);
+    const roleMatch=!activeRoleFilter||roles.includes(activeRoleFilter);
+    return nameMatch&&prefMatch&&tagMatch&&roleMatch;
+  });
   filtered=sortDealers(filtered);
   document.getElementById('dealer-count').textContent=filtered.length+'名表示中';
   const el=document.getElementById('dealerList');
@@ -197,25 +327,43 @@ function renderList(){
   el.innerHTML='';
   filtered.forEach(d=>{
     const techAvg=overallAvg(d.evals,TECH_KEYS),perAvg=overallAvg(d.evals,PER_KEYS),wage=getWage(d);
+    const tags=getDealerTags(d.id);
+    const roles=getDealerRoles(d.id);
     const div=document.createElement('div');div.className='dealer-item';div.onclick=()=>goDetail(d.id);
-    div.innerHTML='<div class="avatar">'+d.name[0]+'</div><div class="dealer-info"><div class="dealer-name">'+d.name+'</div><div class="dealer-meta">'+d.id+'・'+d.pref+'</div>'+(wage?'<div class="dealer-wage">今回 ¥'+wage.toLocaleString()+'/h</div>':'')+'<div style="font-size:11px;color:#999;margin-top:1px">'+d.evals.length+'件の評価</div></div><div class="score-pills">'+(techAvg>0?'<span class="pill pill-tech">技 '+techAvg.toFixed(1)+'</span>':'')+(perAvg>0?'<span class="pill pill-per">柄 '+perAvg.toFixed(1)+'</span>':'')+(wage?'<span class="pill pill-wage">¥'+wage+'</span>':'')+'</div>';
+    const tagHtml=roles.map(r=>'<span class="role-pill">'+r+'</span>').join('')+tags.map(t=>'<span class="tag-pill">'+t+'</span>').join('');
+    div.innerHTML='<div class="avatar">'+d.name[0]+'</div><div class="dealer-info"><div class="dealer-name">'+d.name+'</div><div class="dealer-meta">'+d.id+'・'+d.pref+'</div>'+(wage?'<div class="dealer-wage">今回 ¥'+wage.toLocaleString()+'/h</div>':'')+'<div style="font-size:11px;color:#999;margin-top:1px">'+d.evals.length+'件の評価</div>'+(tagHtml?'<div class="dealer-tags">'+tagHtml+'</div>':'')+'</div><div class="score-pills">'+(techAvg>0?'<span class="pill pill-tech">技 '+techAvg.toFixed(1)+'</span>':'')+(perAvg>0?'<span class="pill pill-per">柄 '+perAvg.toFixed(1)+'</span>':'')+(wage?'<span class="pill pill-wage">¥'+wage+'</span>':'')+'</div>';
     el.appendChild(div);
   });
 }
+
 function goDetail(id){
   currentDealer=dealers.find(d=>d.id===id);
   document.getElementById('detail-avatar').textContent=currentDealer.name[0];
   document.getElementById('detail-name').textContent=currentDealer.name;
   document.getElementById('detail-meta').textContent=currentDealer.id+'・'+currentDealer.pref+'・'+currentDealer.evals.length+'件の評価';
+  updateDetailTags();
   switchTab('summary');showScreen('s-detail');
 }
+
+function updateDetailTags(){
+  const tags=getDealerTags(currentDealer.id);
+  const roles=getDealerRoles(currentDealer.id);
+  const all=[...roles.map(r=>'<span class="role-pill">'+r+'</span>'),...tags.map(t=>'<span class="tag-pill">'+t+'</span>')];
+  document.getElementById('detail-tags').innerHTML=all.join('');
+}
+
 function switchTab(tab){
-  ['summary','evals','info'].forEach(t=>{
+  ['summary','evals','profile','wage','tags'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('active',t===tab);
     document.getElementById('tab-content-'+t).style.display=t===tab?'block':'none';
   });
-  if(tab==='summary')renderSummary();else if(tab==='evals')renderEvals();else renderInfo();
+  if(tab==='summary')renderSummary();
+  else if(tab==='evals')renderEvals();
+  else if(tab==='profile')renderProfile();
+  else if(tab==='wage')renderWage();
+  else if(tab==='tags')renderTagsTab();
 }
+
 function renderSummary(){
   const evals=currentDealer.evals;
   const techAvg=overallAvg(evals,TECH_KEYS),perAvg=overallAvg(evals,PER_KEYS);
@@ -231,6 +379,7 @@ function renderSummary(){
   else{if(mess)html+='<div class="deduct-box">私物・弁当未片付け：'+mess+'回</div>';if(gossip)html+='<div class="deduct-box" style="margin-top:4px">控室での不適切発言：'+gossip+'回</div>';if(other)html+='<div class="deduct-box" style="margin-top:4px">その他問題行動：'+other+'回</div>';}
   document.getElementById('tab-content-summary').innerHTML=html;
 }
+
 function renderEvals(){
   const evals=currentDealer.evals,el=document.getElementById('tab-content-evals');
   if(!evals.length){el.innerHTML='<div class="empty">評価データがありません</div>';return;}
@@ -247,23 +396,140 @@ function renderEvals(){
     el.appendChild(div);
   });
 }
-function renderInfo(){
-  const d=currentDealer,info=allInfo[d.id]||{},el=document.getElementById('tab-content-info');
-  el.innerHTML='<div class="card"><div class="card-title">💴 給与情報</div><div class="form-field"><div class="form-label">今回時給（円）</div><input class="form-input" id="wage_now" type="number" placeholder="例：1200" value="'+(info['今回時給']||'')+'"></div><div class="form-field"><div class="form-label">次回時給（円）</div><input class="form-input" id="wage_next" type="number" placeholder="例：1300" value="'+(info['次回時給']||'')+'"></div><div class="form-field"><div class="form-label">交通費（円）<span class="badge">1000円超の場合のみ</span></div><input class="form-input" id="transport" type="number" placeholder="例：1500" value="'+(info['交通費']||'')+'"></div><div class="toggle-row"><div class="toggle-label">遠方補助あり</div><div class="toggle '+(info['遠方補助']==='あり'?'on':'')+'" id="travel-toggle" onclick="toggleAid()"></div></div></div><div class="card"><div class="card-title">🚃 交通情報</div><div class="form-field"><div class="form-label">最寄り駅</div><input class="form-input" id="nearest_station" type="text" placeholder="例：大阪梅田駅" value="'+(info['最寄り駅']||'')+'"></div><div class="form-field"><div class="form-label">終電情報</div><input class="form-input" id="last_train" type="text" placeholder="例：23:45 大阪梅田発" value="'+(info['終電情報']||'')+'"></div></div><div class="card"><div class="card-title">📝 備考</div><div class="form-field"><textarea class="form-input" id="info_note" rows="3" placeholder="その他メモ">'+(info['備考']||'')+'</textarea></div></div><button class="save-btn" onclick="saveInfo()">保存する</button><div class="save-toast" id="save-toast">✅ 保存しました</div>';
+
+function renderProfile(){
+  const d=currentDealer,info=allInfo[d.id]||{},el=document.getElementById('tab-content-profile');
+  el.innerHTML='<div class="card"><div class="card-title">👤 プロフィール情報 <span class="badge">運営のみ</span></div>'+
+    '<div class="form-field"><div class="form-label">エルメID</div><input class="form-input" id="prof_erume" placeholder="エルメのID" value="'+(info['エルメID']||'')+'"></div>'+
+    '<div class="form-field"><div class="form-label">本名</div><input class="form-input" id="prof_realname" placeholder="本名" value="'+(info['本名']||'')+'"></div>'+
+    '<div class="form-field"><div class="form-label">生年月日</div><input class="form-input" id="prof_dob" type="date" value="'+(info['生年月日']||'')+'"></div>'+
+    '<div class="form-field"><div class="form-label">性別</div><select class="form-select" id="prof_gender"><option value="">選択</option><option value="男性"'+(info['性別']==='男性'?' selected':'')+'>男性</option><option value="女性"'+(info['性別']==='女性'?' selected':'')+'>女性</option><option value="その他"'+(info['性別']==='その他'?' selected':'')+'>その他</option></select></div>'+
+    '<div class="form-field"><div class="form-label">その他メモ（検索対応）</div><textarea class="form-input" id="prof_note" rows="4" placeholder="自由記入欄（検索でヒットします）">'+(info['備考']||'')+'</textarea></div>'+
+    '</div><button class="save-btn" onclick="saveProfile()">保存する</button><div class="save-toast" id="profile-toast">✅ 保存しました</div>';
 }
-function toggleAid(){document.getElementById('travel-toggle').classList.toggle('on');}
-async function saveInfo(){
+
+async function saveProfile(){
   const d=currentDealer;
-  const travelAid=document.getElementById('travel-toggle').classList.contains('on')?'あり':'なし';
-  const payload={type:'dealer_info',dealer_id:d.id,wage_now:document.getElementById('wage_now').value,wage_next:document.getElementById('wage_next').value,transport:document.getElementById('transport').value,travel_aid:travelAid,nearest_station:document.getElementById('nearest_station').value,last_train:document.getElementById('last_train').value,note:document.getElementById('info_note').value};
+  const info=allInfo[d.id]||{};
+  const payload={type:'dealer_info',dealer_id:d.id,erume_id:document.getElementById('prof_erume').value,real_name:document.getElementById('prof_realname').value,birth_date:document.getElementById('prof_dob').value,gender:document.getElementById('prof_gender').value,note:document.getElementById('prof_note').value,wage_now:info['今回時給']||'',wage_next:info['次回時給']||'',transport:info['交通費']||'',travel_aid:info['遠方補助']||'',nearest_station:info['最寄り駅']||'',last_train:info['終電情報']||''};
   try{
     await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    allInfo[d.id]={'ディーラーID':d.id,'今回時給':payload.wage_now,'次回時給':payload.wage_next,'交通費':payload.transport,'遠方補助':travelAid,'最寄り駅':payload.nearest_station,'終電情報':payload.last_train,'備考':payload.note};
-    const toast=document.getElementById('save-toast');toast.style.display='block';setTimeout(()=>toast.style.display='none',2500);
+    if(!allInfo[d.id])allInfo[d.id]={};
+    Object.assign(allInfo[d.id],{'エルメID':payload.erume_id,'本名':payload.real_name,'生年月日':payload.birth_date,'性別':payload.gender,'備考':payload.note});
+    const toast=document.getElementById('profile-toast');toast.style.display='block';setTimeout(()=>toast.style.display='none',2500);
   }catch(e){alert('保存に失敗しました');}
 }
+
+function renderWage(){
+  const d=currentDealer,info=allInfo[d.id]||{},el=document.getElementById('tab-content-wage');
+  el.innerHTML='<div class="card"><div class="card-title">💴 給与情報</div>'+
+    '<div class="form-field"><div class="form-label">今回時給（円）</div><input class="form-input" id="wage_now" type="number" placeholder="例：1200" value="'+(info['今回時給']||'')+'"></div>'+
+    '<div class="form-field"><div class="form-label">次回時給（円）</div><input class="form-input" id="wage_next" type="number" placeholder="例：1300" value="'+(info['次回時給']||'')+'"></div>'+
+    '<div class="form-field"><div class="form-label">交通費（円）<span class="badge">1000円超の場合のみ</span></div><input class="form-input" id="transport" type="number" placeholder="例：1500" value="'+(info['交通費']||'')+'"></div>'+
+    '<div class="toggle-row"><div class="toggle-label">遠方補助あり</div><div class="toggle '+(info['遠方補助']==='あり'?'on':'')+'" id="travel-toggle" onclick="this.classList.toggle(`on`)"></div></div>'+
+    '</div><div class="card"><div class="card-title">🚃 交通情報</div>'+
+    '<div class="form-field"><div class="form-label">最寄り駅</div><input class="form-input" id="nearest_station" placeholder="例：大阪梅田駅" value="'+(info['最寄り駅']||'')+'"></div>'+
+    '<div class="form-field"><div class="form-label">終電情報</div><input class="form-input" id="last_train" placeholder="例：23:45 大阪梅田発" value="'+(info['終電情報']||'')+'"></div>'+
+    '</div><button class="save-btn" onclick="saveWage()">保存する</button><div class="save-toast" id="wage-toast">✅ 保存しました</div>';
+}
+
+async function saveWage(){
+  const d=currentDealer,info=allInfo[d.id]||{};
+  const travelAid=document.getElementById('travel-toggle').classList.contains('on')?'あり':'なし';
+  const payload={type:'dealer_info',dealer_id:d.id,wage_now:document.getElementById('wage_now').value,wage_next:document.getElementById('wage_next').value,transport:document.getElementById('transport').value,travel_aid:travelAid,nearest_station:document.getElementById('nearest_station').value,last_train:document.getElementById('last_train').value,erume_id:info['エルメID']||'',real_name:info['本名']||'',birth_date:info['生年月日']||'',gender:info['性別']||'',note:info['備考']||''};
+  try{
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!allInfo[d.id])allInfo[d.id]={};
+    Object.assign(allInfo[d.id],{'今回時給':payload.wage_now,'次回時給':payload.wage_next,'交通費':payload.transport,'遠方補助':travelAid,'最寄り駅':payload.nearest_station,'終電情報':payload.last_train});
+    const toast=document.getElementById('wage-toast');toast.style.display='block';setTimeout(()=>toast.style.display='none',2500);
+  }catch(e){alert('保存に失敗しました');}
+}
+
+function renderTagsTab(){
+  const d=currentDealer;
+  const attached=getDealerTags(d.id);
+  const attachedRoles=getDealerRoles(d.id);
+  let html='<div class="card"><div class="card-title">👔 役職</div><div class="tag-list">';
+  ROLES.forEach(role=>{
+    const isAttached=attachedRoles.includes(role);
+    html+='<div class="role-item'+(isAttached?' attached':'')+'" onclick="toggleDealerRole(\''+role+'\')">'+(isAttached?'✓ ':'')+role+'</div>';
+  });
+  html+='</div></div>';
+  html+='<div class="card"><div class="card-title">🏷️ タグ</div>';
+  if(!allTags.length){html+='<div style="font-size:13px;color:#999;margin-bottom:8px">タグがまだありません</div>';}
+  else{
+    html+='<div class="tag-list">';
+    allTags.forEach(tag=>{
+      const isAttached=attached.includes(tag);
+      html+='<div class="tag-item'+(isAttached?' attached':'')+'" onclick="toggleDealerTag(\''+tag+'\')">'+(isAttached?'✓ ':'')+tag+'</div>';
+    });
+    html+='</div>';
+  }
+  html+='</div><button class="save-btn" style="background:#3b82f6;border-color:#3b82f6" onclick="goTagManager()">🏷️ タグを新規作成・管理する</button>';
+  document.getElementById('tab-content-tags').innerHTML=html;
+}
+
+function toggleDealerRole(role){
+  const id=currentDealer.id;
+  if(!dealerRoles[id])dealerRoles[id]=[];
+  const idx=dealerRoles[id].indexOf(role);
+  if(idx>=0)dealerRoles[id].splice(idx,1);
+  else dealerRoles[id].push(role);
+  saveStorage();renderTagsTab();updateDetailTags();
+}
+
+function toggleDealerTag(tag){
+  const id=currentDealer.id;
+  if(!dealerTags[id])dealerTags[id]=[];
+  const idx=dealerTags[id].indexOf(tag);
+  if(idx>=0)dealerTags[id].splice(idx,1);
+  else dealerTags[id].push(tag);
+  saveStorage();renderTagsTab();updateDetailTags();
+}
+
+function goTagManager(){showScreen('s-tagmanager');renderAllTags();}
+
+function renderAllTags(){
+  const el=document.getElementById('allTagsList');
+  if(!allTags.length){el.innerHTML='<div style="font-size:13px;color:#999">タグがまだありません</div>';return;}
+  el.innerHTML='';
+  allTags.forEach((tag,i)=>{
+    const div=document.createElement('div');div.className='tag-item';
+    div.innerHTML=tag+'<span class="tag-remove" onclick="deleteTag('+i+')">×</span>';
+    el.appendChild(div);
+  });
+}
+
+function createTag(){
+  const input=document.getElementById('newTagInput');
+  const name=input.value.trim();
+  if(!name||allTags.includes(name))return;
+  allTags.push(name);saveStorage();renderTagFilters();renderAllTags();input.value='';
+}
+
+function deleteTag(idx){
+  const tag=allTags[idx];
+  if(!confirm(tag+'を削除しますか？'))return;
+  allTags.splice(idx,1);
+  Object.keys(dealerTags).forEach(id=>{dealerTags[id]=dealerTags[id].filter(t=>t!==tag);});
+  saveStorage();renderTagFilters();renderAllTags();
+}
+
 function goList(){showScreen('s-list');renderList();}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));}
+
+document.getElementById('ap1').addEventListener('click',()=>adminPinPress('1'));
+document.getElementById('ap2').addEventListener('click',()=>adminPinPress('2'));
+document.getElementById('ap3').addEventListener('click',()=>adminPinPress('3'));
+document.getElementById('ap4').addEventListener('click',()=>adminPinPress('4'));
+document.getElementById('ap5').addEventListener('click',()=>adminPinPress('5'));
+document.getElementById('ap6').addEventListener('click',()=>adminPinPress('6'));
+document.getElementById('ap7').addEventListener('click',()=>adminPinPress('7'));
+document.getElementById('ap8').addEventListener('click',()=>adminPinPress('8'));
+document.getElementById('ap9').addEventListener('click',()=>adminPinPress('9'));
+document.getElementById('ap0').addEventListener('click',()=>adminPinPress('0'));
+document.getElementById('apdel').addEventListener('click',()=>adminPinDelete());
+document.getElementById('apok').addEventListener('click',()=>adminPinSubmit());
 </script>
 </body>
 </html>
