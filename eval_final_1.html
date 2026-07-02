@@ -221,11 +221,36 @@ const ratings={};const deducts={mess:0,gossip:0,other:0};const selected={eval:nu
 const toKana=s=>s.replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
 const norm=s=>toKana((s||'').toLowerCase());
 let pinValue='';
-function pinPress(n){if(pinValue.length>=4)return;pinValue+=n;updatePinDisplay();if(pinValue.length===4)setTimeout(pinSubmit,300);}
-function pinDelete(){pinValue=pinValue.slice(0,-1);updatePinDisplay();}
-function updatePinDisplay(){document.getElementById('pinDots').textContent=pinValue.split('').map(()=>'●').join('')+'––––'.slice(pinValue.length);}
+function pinPress(n){
+  if(pinValue.length>=4)return;
+  pinValue+=n;
+  updatePinDisplay();
+  if(pinValue.length===4)setTimeout(pinSubmit,300);
+}
+function pinDelete(){
+  pinValue=pinValue.slice(0,-1);
+  updatePinDisplay();
+}
+function updatePinDisplay(){
+  const dots=pinValue.split('').map(()=>'●').join('');
+  const dashes='––––'.slice(pinValue.length);
+  document.getElementById('pinDots').textContent=dots+dashes;
+}
 function pinSubmit(){
   const ev=PIN_MAP[pinValue];
+  document.getElementById('pinError').style.display='none';
+  if(!ev){
+    document.getElementById('pinError').style.display='block';
+    pinValue='';
+    updatePinDisplay();
+    return;
+  }
+  selected.eval=ev;
+  const roleMap={'TD':'td','フロア':'floor','ピット':'pit','運営':'admin'};
+  showScreen('screen0');
+  document.getElementById('evalSelectedLabel').textContent='✓ '+ev.name+'（'+ev.role+'）';
+  document.getElementById('evalRole').value=roleMap[ev.role]||'';
+}
   document.getElementById('pinError').style.display='none';
   if(!ev){document.getElementById('pinError').style.display='block';pinValue='';updatePinDisplay();return;}
   selected.eval=ev;
